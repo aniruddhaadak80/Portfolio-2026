@@ -78,30 +78,30 @@ export default function Hero() {
     return (
         <section
             ref={containerRef}
-            className="h-screen w-full flex flex-col justify-center items-center relative"
+            className="h-screen w-full flex flex-col justify-center items-center relative overflow-hidden"
             style={{ perspective: '1000px' }}
         >
-            <div className="z-10 text-center">
+            <div className="z-10 text-center mix-blend-multiply">
                 <h1
                     ref={titleRef}
-                    className="text-6xl md:text-9xl font-black mb-4 overflow-hidden"
+                    className="text-6xl md:text-9xl font-black mb-4 overflow-hidden text-[#1D1D1F]"
                 >
                     ANIRUDDHA ADAK
                 </h1>
                 <p
                     ref={subTitleRef}
-                    className="text-xl md:text-2xl text-gray-400 font-light tracking-widest"
+                    className="text-xl md:text-2xl text-[#86868B] font-medium tracking-widest"
                     style={{ opacity: 0 }}
                 >
                     FULL STACK DEVELOPER & AI ENGINEER
                 </p>
             </div>
 
-            {/* Background Abstract Elements */}
-            <div className="absolute inset-0 -z-10 overflow-hidden opacity-20">
-                <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500 rounded-full mix-blend-screen filter blur-3xl animate-pulse"></div>
-                <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-purple-500 rounded-full mix-blend-screen filter blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-                <div className="absolute bottom-1/4 left-1/2 w-64 h-64 bg-pink-500 rounded-full mix-blend-screen filter blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+            {/* Background Abstract Elements - Soft/Cream Style */}
+            <div className="absolute inset-0 -z-10 overflow-hidden opacity-30">
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#2997FF] rounded-full mix-blend-multiply filter blur-3xl animate-pulse opacity-20"></div>
+                <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-[#AF52DE] rounded-full mix-blend-multiply filter blur-3xl animate-pulse opacity-20" style={{ animationDelay: '1s' }}></div>
+                <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-[#FF2D55] rounded-full mix-blend-multiply filter blur-3xl animate-pulse opacity-20" style={{ animationDelay: '2s' }}></div>
             </div>
         </section>
     );

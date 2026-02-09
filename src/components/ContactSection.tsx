@@ -105,14 +105,14 @@ export default function ContactSection() {
         <section
             ref={sectionRef}
             id="contact"
-            className="min-h-screen w-full bg-black py-40 flex flex-col items-center justify-center relative overflow-hidden px-6"
+            className="min-h-screen w-full bg-[#F5F5F7] py-40 flex flex-col items-center justify-center relative overflow-hidden px-6"
         >
             {/* Particle Field Background */}
-            <div ref={particleContainerRef} className="absolute inset-0 pointer-events-none opacity-30">
+            <div ref={particleContainerRef} className="absolute inset-0 pointer-events-none opacity-20">
                 {[...Array(40)].map((_, i) => (
                     <div
                         key={i}
-                        className="particle absolute w-1 h-1 bg-blue-500 rounded-full"
+                        className="particle absolute w-1 h-1 bg-[#2997FF] rounded-full"
                         style={{
                             top: `${random(0, 100)}%`,
                             left: `${random(0, 100)}%`,
@@ -122,22 +122,22 @@ export default function ContactSection() {
             </div>
 
             <div className="max-w-4xl w-full relative z-10 text-center">
-                <h2 className="contact-element text-7xl md:text-9xl font-black uppercase tracking-tighter mb-4 text-white">
-                    LET'S <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">TALK.</span>
+                <h2 className="contact-element text-7xl md:text-9xl font-black uppercase tracking-tighter mb-4 text-[#1D1D1F]">
+                    LET'S <span className="text-[#2997FF]">TALK.</span>
                 </h2>
-                <p className="contact-element text-gray-500 font-mono tracking-widest text-sm uppercase mb-20 italic">Architecting the next digital era</p>
+                <p className="contact-element text-[#86868B] font-mono tracking-widest text-sm uppercase mb-20 italic">Architecting the next digital era</p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-start text-left">
 
                     {/* Left: Info & Socials */}
                     <div className="space-y-12">
                         <div className="contact-element">
-                            <span className="text-[10px] font-black tracking-widest text-white/30 uppercase block mb-4">Direct Channel</span>
-                            <a href="mailto:hello@aniruddha.dev" className="text-3xl font-black hover:text-blue-500 transition-colors">hello@aniruddha.dev</a>
+                            <span className="text-[10px] font-black tracking-widest text-[#86868B]/60 uppercase block mb-4">Direct Channel</span>
+                            <a href="mailto:hello@aniruddha.dev" className="text-3xl font-black text-[#1D1D1F] hover:text-[#2997FF] transition-colors">hello@aniruddha.dev</a>
                         </div>
 
                         <div className="contact-element">
-                            <span className="text-[10px] font-black tracking-widest text-white/30 uppercase block mb-6">Coordinate Hub</span>
+                            <span className="text-[10px] font-black tracking-widest text-[#86868B]/60 uppercase block mb-6">Coordinate Hub</span>
                             <div className="grid grid-cols-2 gap-4">
                                 {socialLinks.map((link) => (
                                     <a
@@ -145,11 +145,11 @@ export default function ContactSection() {
                                         href={link.url}
                                         onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
                                         onMouseLeave={(e) => handleMouseLeave(e.currentTarget)}
-                                        className="group relative p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/30 transition-all flex items-center gap-4 overflow-hidden"
+                                        className="group relative p-6 rounded-2xl bg-white border border-gray-200 hover:border-[#2997FF]/30 transition-all flex items-center gap-4 overflow-hidden shadow-sm hover:shadow-md"
                                     >
                                         <span className="text-2xl">{link.icon}</span>
-                                        <span className="font-bold text-xs uppercase tracking-widest">{link.name}</span>
-                                        <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        <span className="font-bold text-xs uppercase tracking-widest text-[#1D1D1F]">{link.name}</span>
+                                        <div className="absolute inset-0 bg-[#2997FF]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                     </a>
                                 ))}
                             </div>
@@ -160,16 +160,16 @@ export default function ContactSection() {
                     <form
                         ref={formRef}
                         onSubmit={handleSubmit}
-                        className="contact-element relative p-10 rounded-[3rem] bg-gradient-to-br from-white/5 to-transparent border border-white/10 backdrop-blur-3xl shadow-2xl space-y-6 overflow-hidden"
+                        className="contact-element relative p-10 rounded-[3rem] bg-white border border-gray-100 shadow-2xl space-y-6 overflow-hidden"
                     >
-                        {/* Animated Border Glow */}
-                        <div className="absolute -top-[100%] -left-[100%] w-[300%] h-[300%] bg-gradient-conic from-blue-500/0 via-blue-500/20 to-blue-500/0 animate-spin-slow pointer-events-none" />
+                        {/* Animated Border Glow - Subtle for light mode */}
+                        <div className="absolute -top-[100%] -left-[100%] w-[300%] h-[300%] bg-gradient-conic from-[#2997FF]/0 via-[#2997FF]/10 to-[#2997FF]/0 animate-spin-slow pointer-events-none" />
 
                         <div>
                             <input
                                 type="text"
                                 placeholder="IDENTIFIER"
-                                className="w-full bg-black/40 border border-white/5 rounded-2xl p-5 font-mono text-xs uppercase tracking-widest focus:border-blue-500 outline-none transition-all focus:shadow-[0_0_20px_rgba(59,130,246,0.3)] placeholder:text-white/20"
+                                className="w-full bg-[#F5F5F7] border border-transparent rounded-2xl p-5 font-mono text-xs uppercase tracking-widest text-[#1D1D1F] focus:bg-white focus:border-[#2997FF] outline-none transition-all placeholder:text-[#86868B]"
                                 required
                             />
                         </div>
@@ -177,7 +177,7 @@ export default function ContactSection() {
                             <textarea
                                 placeholder="MESSAGE PAYLOAD"
                                 rows={4}
-                                className="w-full bg-black/40 border border-white/5 rounded-2xl p-5 font-mono text-xs uppercase tracking-widest focus:border-blue-500 outline-none transition-all focus:shadow-[0_0_20px_rgba(59,130,246,0.3)] placeholder:text-white/20"
+                                className="w-full bg-[#F5F5F7] border border-transparent rounded-2xl p-5 font-mono text-xs uppercase tracking-widest text-[#1D1D1F] focus:bg-white focus:border-[#2997FF] outline-none transition-all placeholder:text-[#86868B]"
                                 required
                             />
                         </div>
@@ -185,17 +185,17 @@ export default function ContactSection() {
                         <button
                             type="submit"
                             disabled={isSubmitting || isSubmitted}
-                            className="w-full py-5 bg-white text-black font-black uppercase tracking-[0.3em] rounded-2xl overflow-hidden relative group hover:scale-105 active:scale-95 transition-all text-sm"
+                            className="w-full py-5 bg-[#1D1D1F] text-white font-black uppercase tracking-[0.3em] rounded-2xl overflow-hidden relative group hover:scale-105 active:scale-95 transition-all text-sm"
                         >
                             <span className="relative z-10">{isSubmitted ? "TRANSMISSION SENT" : isSubmitting ? "TRANSMITTING..." : "INITIALIZE CONTACT"}</span>
-                            <div className="absolute inset-0 bg-blue-500 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out" />
+                            <div className="absolute inset-0 bg-[#2997FF] -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out" />
                         </button>
                     </form>
                 </div>
             </div>
 
             {/* Footer Tag */}
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-mono text-white/20 tracking-[1em] uppercase">
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-mono text-[#86868B] tracking-[1em] uppercase">
                 Aniruddha Adak © 2026 // System Pulse: Online
             </div>
         </section>

@@ -79,10 +79,10 @@ export default function CustomCursor() {
 
     return (
         <>
-            {/* Main cursor ring */}
+            {/* Main cursor ring - High contrast mix-blend */}
             <div
                 ref={cursorRef}
-                className="fixed pointer-events-none z-[9999] w-10 h-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/50 mix-blend-difference"
+                className="fixed pointer-events-none z-[9999] w-10 h-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white mix-blend-difference"
                 style={{ left: 0, top: 0 }}
             />
             {/* Cursor dot */}

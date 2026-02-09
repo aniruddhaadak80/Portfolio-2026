@@ -88,10 +88,10 @@ export default function Navigation() {
         <>
             <button
                 onClick={toggleMenu}
-                className="fixed top-8 right-8 z-[100] w-12 h-12 flex items-center justify-center bg-white rounded-full mix-blend-difference hover:scale-110 transition-transform"
+                className="fixed top-8 right-8 z-[100] w-12 h-12 flex items-center justify-center bg-[#1D1D1F] rounded-full hover:scale-110 transition-transform shadow-lg"
             >
-                <div className={`w-6 h-0.5 bg-black transition-all ${isOpen ? 'rotate-45 translate-y-0.5' : '-translate-y-1'}`} />
-                <div className={`absolute w-6 h-0.5 bg-black transition-all ${isOpen ? '-rotate-45 -translate-y-0' : 'translate-y-1'}`} />
+                <div className={`w-6 h-0.5 bg-[#F5F5F7] transition-all ${isOpen ? 'rotate-45 translate-y-0.5' : '-translate-y-1'}`} />
+                <div className={`absolute w-6 h-0.5 bg-[#F5F5F7] transition-all ${isOpen ? '-rotate-45 -translate-y-0' : 'translate-y-1'}`} />
             </button>
 
             <div ref={menuRef} className="fixed inset-0 z-40 pointer-events-none">
@@ -100,13 +100,13 @@ export default function Navigation() {
                     className="absolute inset-0 bg-white"
                     style={{ clipPath: 'circle(0% at 90% 10%)', pointerEvents: isOpen ? 'auto' : 'none' }}
                 >
-                    <div ref={linksRef} className="h-full flex flex-col items-center justify-center gap-8 text-black">
+                    <div ref={linksRef} className="h-full flex flex-col items-center justify-center gap-8 text-[#1D1D1F]">
                         {routes.map((route) => (
                             <Link
                                 key={route.name}
                                 href={pathname === '/' ? route.path : `/${route.path}`}
                                 onClick={(e) => handleLinkClick(e, route.path)}
-                                className={`text-4xl md:text-6xl font-bold transition-colors hover:text-gray-500 ${pathname === route.path ? 'line-through decoration-blue-500' : ''}`}
+                                className={`text-4xl md:text-6xl font-bold transition-all hover:text-[#2997FF] hover:tracking-widest ${pathname === route.path ? 'text-[#2997FF]' : ''}`}
                                 style={{ opacity: 0 }}
                             >
                                 {route.name}

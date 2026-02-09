@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Elegant Cream Palette */
+  --background: #F5F5F7;
+  --foreground: #1D1D1F;
+  --accent: #2997FF;
+  --secondary: #86868B;
 }
 
 @theme inline {
@@ -12,15 +15,17 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Force Light/Cream Mode by default */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  /* Prevent horizontal scroll */
+}
+
+/* Global Selection Style */
+::selection {
+  background: var(--accent);
+  color: #ffffff;
 }

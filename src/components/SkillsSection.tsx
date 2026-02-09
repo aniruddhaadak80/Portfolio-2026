@@ -102,13 +102,14 @@ export default function SkillsSection() {
     return (
         <section
             ref={sectionRef}
-            className="min-h-screen w-full relative bg-gray-950 py-32 overflow-hidden flex flex-col items-center"
+            id="skills"
+            className="min-h-screen w-full relative bg-[#F5F5F7] py-32 overflow-hidden flex flex-col items-center"
         >
-            {/* Tech Soup Background */}
+            {/* Tech Soup Background - Subtle Dark */}
             {[...Array(15)].map((_, i) => (
                 <div
                     key={i}
-                    className="tech-soup-item absolute text-white/5 text-8xl font-black pointer-events-none select-none uppercase"
+                    className="tech-soup-item absolute text-[#1D1D1F]/5 text-8xl font-black pointer-events-none select-none uppercase"
                     style={{
                         top: `${random(0, 100)}%`,
                         left: `${random(0, 100)}%`,
@@ -122,8 +123,8 @@ export default function SkillsSection() {
 
                 {/* Grid Column */}
                 <div className="flex-1">
-                    <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-12 text-white">
-                        THE <span className="text-blue-500">ENGINE</span>
+                    <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-12 text-[#1D1D1F]">
+                        THE <span className="text-[#2997FF]">ENGINE</span>
                     </h2>
 
                     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 perspective-1000">
@@ -133,19 +134,16 @@ export default function SkillsSection() {
                                 onClick={() => setSelectedSkill(skill)}
                                 onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
                                 onMouseLeave={(e) => handleMouseLeave(e.currentTarget)}
-                                className={`skill-card group relative p-8 rounded-3xl border transition-all cursor-pointer overflow-hidden ${selectedSkill?.name === skill.name ? 'bg-blue-600 border-white shadow-[0_0_30px_rgba(59,130,246,0.5)]' : 'bg-white/5 border-white/10 hover:bg-white/10'}`}
+                                className={`skill-card group relative p-8 rounded-3xl border transition-all cursor-pointer overflow-hidden ${selectedSkill?.name === skill.name ? 'bg-[#2997FF] border-transparent shadow-xl text-white' : 'bg-white border-gray-200 hover:shadow-lg hover:-translate-y-1'}`}
                                 style={{ transformStyle: 'preserve-3d', opacity: 0 }}
                             >
                                 <div className="relative z-10 flex flex-col items-center">
-                                    <svg viewBox="0 0 24 24" fill="currentColor" className={`w-12 h-12 mb-4 transition-transform group-hover:scale-110 duration-500 ${selectedSkill?.name === skill.name ? 'text-white' : ''}`} style={{ color: selectedSkill?.name === skill.name ? '#fff' : skill.color }}>
+                                    <svg viewBox="0 0 24 24" fill="currentColor" className={`w-12 h-12 mb-4 transition-transform group-hover:scale-110 duration-500 ${selectedSkill?.name === skill.name ? 'text-white' : 'text-[#1D1D1F]'}`} style={{ color: selectedSkill?.name === skill.name ? '#fff' : skill.color }}>
                                         {skill.icon}
                                     </svg>
-                                    <span className="font-mono text-xs uppercase tracking-widest text-gray-500 group-hover:text-gray-300">Technology</span>
-                                    <h3 className="font-black text-xl">{skill.name}</h3>
+                                    <span className={`font-mono text-xs uppercase tracking-widest ${selectedSkill?.name === skill.name ? 'text-white/80' : 'text-gray-400'}`}>Technology</span>
+                                    <h3 className={`font-black text-xl ${selectedSkill?.name === skill.name ? 'text-white' : 'text-[#1D1D1F]'}`}>{skill.name}</h3>
                                 </div>
-
-                                {/* 3D Glow Effect */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
                         ))}
                     </div>
@@ -156,51 +154,51 @@ export default function SkillsSection() {
                     {selectedSkill ? (
                         <div
                             ref={detailRef}
-                            className="sticky top-32 p-10 rounded-[3rem] bg-white text-black h-fit shadow-2xl"
+                            className="sticky top-32 p-10 rounded-[3rem] bg-white text-[#1D1D1F] h-fit shadow-2xl border border-gray-100"
                         >
                             <div className="flex justify-between items-start mb-8">
                                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-16 h-16" style={{ color: selectedSkill.color === '#FFFFFF' ? '#000' : selectedSkill.color }}>
                                     {selectedSkill.icon}
                                 </svg>
-                                <button onClick={() => setSelectedSkill(null)} className="text-black/30 hover:text-black transition-colors text-2xl">×</button>
+                                <button onClick={() => setSelectedSkill(null)} className="text-gray-400 hover:text-black transition-colors text-2xl">×</button>
                             </div>
 
                             <h3 className="text-4xl font-black uppercase mb-4 leading-none">{selectedSkill.name}</h3>
-                            <p className="text-gray-600 mb-8 leading-relaxed font-medium">{selectedSkill.desc}</p>
+                            <p className="text-gray-500 mb-8 leading-relaxed font-medium">{selectedSkill.desc}</p>
 
                             <div className="space-y-2">
-                                <div className="flex justify-between font-mono text-xs uppercase font-bold tracking-tighter text-blue-600">
+                                <div className="flex justify-between font-mono text-xs uppercase font-bold tracking-tighter text-[#2997FF]">
                                     <span>Proficiency</span>
                                     <span>{selectedSkill.level}%</span>
                                 </div>
                                 <div className="h-4 bg-gray-100 rounded-full overflow-hidden p-1">
-                                    <div className="level-bar h-full bg-blue-600 rounded-full shadow-[0_0_10px_rgba(37,99,235,0.4)]" style={{ width: 0 }} />
+                                    <div className="level-bar h-full bg-[#2997FF] rounded-full shadow-sm" style={{ width: 0 }} />
                                 </div>
                             </div>
 
-                            <div className="mt-12 pt-8 border-t border-black/5">
-                                <span className="block text-[0.6rem] uppercase tracking-[0.3em] font-black text-black/20 mb-4">Ecosystem Status</span>
+                            <div className="mt-12 pt-8 border-t border-gray-100">
+                                <span className="block text-[0.6rem] uppercase tracking-[0.3em] font-black text-gray-300 mb-4">Ecosystem Status</span>
                                 <div className="flex flex-wrap gap-2">
                                     {['STABLE', 'SCALABLE', 'OPTIMIZED'].map(tag => (
-                                        <span key={tag} className="px-3 py-1 bg-black text-white text-[10px] font-black rounded-full italic">{tag}</span>
+                                        <span key={tag} className="px-3 py-1 bg-[#1D1D1F] text-white text-[10px] font-black rounded-full italic">{tag}</span>
                                     ))}
                                 </div>
                             </div>
                         </div>
                     ) : (
-                        <div className="sticky top-32 border-2 border-dashed border-white/10 rounded-[3rem] h-full flex flex-col items-center justify-center p-12 text-center text-white/20">
-                            <div className="text-6xl mb-4 animate-bounce">👆</div>
-                            <p className="font-mono text-sm uppercase tracking-widest">Select a technology to inspect architecture</p>
+                        <div className="sticky top-32 border-2 border-dashed border-gray-200 rounded-[3rem] h-full flex flex-col items-center justify-center p-12 text-center text-gray-300">
+                            <div className="text-6xl mb-4 animate-bounce text-gray-200">👆</div>
+                            <p className="font-mono text-sm uppercase tracking-widest">Select a technology</p>
                         </div>
                     )}
                 </div>
             </div>
 
             {/* Scrolling Banner */}
-            <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-white py-4 -rotate-2 origin-left">
+            <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-[#1D1D1F] py-4 -rotate-2 origin-left">
                 <div className="flex whitespace-nowrap animate-marquee">
                     {[...Array(20)].map((_, i) => (
-                        <span key={i} className="text-black text-2xl font-black uppercase mx-8 italic">
+                        <span key={i} className="text-white text-2xl font-black uppercase mx-8 italic">
                             100% Performance • Scalable Systems • Cloud Native • AI Integrated
                         </span>
                     ))}

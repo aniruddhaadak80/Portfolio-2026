@@ -111,17 +111,17 @@ export default function ExperienceTimeline() {
         <section
             ref={sectionRef}
             id="experience"
-            className="min-h-screen w-full bg-black py-40 overflow-hidden px-6 relative"
+            className="min-h-screen w-full bg-[#F5F5F7] py-40 overflow-hidden px-6 relative"
         >
             <div className="max-w-4xl mx-auto flex gap-12 lg:gap-24">
 
                 {/* Timeline Column */}
-                <div className="relative w-2 bg-gray-900 rounded-full h-[1200px]">
+                <div className="relative w-2 bg-gray-200 rounded-full h-[1200px]">
                     <svg className="absolute inset-0 h-full w-2" viewBox="0 0 8 1200" preserveAspectRatio="none">
                         <path
                             ref={pathRef}
                             d="M4 0V1200"
-                            stroke="white"
+                            stroke="#2997FF"
                             strokeWidth="4"
                             strokeLinecap="round"
                             fill="none"
@@ -134,7 +134,7 @@ export default function ExperienceTimeline() {
                             key={i}
                             onMouseEnter={(e) => handleMarkerHover(i, e.currentTarget)}
                             onMouseLeave={(e) => handleMarkerLeave(i, e.currentTarget)}
-                            className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-white bg-black z-20 cursor-pointer blur-[2px]"
+                            className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-[#2997FF] bg-white z-20 cursor-pointer blur-[1px]"
                             style={{ top: `${(i + 1) * 300}px` }}
                         />
                     ))}
@@ -148,28 +148,28 @@ export default function ExperienceTimeline() {
                             className="exp-card group relative"
                             style={{ opacity: 0 }}
                         >
-                            <span className="text-8xl font-black text-gray-900 absolute -top-16 -left-8 pointer-events-none select-none">
+                            <span className="text-8xl font-black text-gray-200 absolute -top-16 -left-8 pointer-events-none select-none">
                                 {exp.year}
                             </span>
 
-                            <div className="relative z-10 p-10 rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-xl hover:border-white/30 transition-all">
+                            <div className="relative z-10 p-10 rounded-[2rem] bg-white border border-gray-100 shadow-xl hover:shadow-2xl transition-all">
                                 <div className="flex items-center gap-4 mb-4">
-                                    <div className="w-12 h-12 rounded-full border-2 border-blue-500 flex items-center justify-center font-bold text-blue-500">
+                                    <div className="w-12 h-12 rounded-full border-2 border-[#2997FF] flex items-center justify-center font-bold text-[#2997FF] bg-blue-50">
                                         {exp.company[0]}
                                     </div>
                                     <div>
-                                        <h3 className="text-3xl font-black">{exp.role}</h3>
-                                        <p className="text-blue-500 font-mono text-sm tracking-tighter uppercase">{exp.company}</p>
+                                        <h3 className="text-3xl font-black text-[#1D1D1F]">{exp.role}</h3>
+                                        <p className="text-[#2997FF] font-mono text-sm tracking-tighter uppercase">{exp.company}</p>
                                     </div>
                                 </div>
-                                <p className="text-gray-400 text-lg leading-relaxed mb-8">{exp.desc}</p>
+                                <p className="text-[#86868B] text-lg leading-relaxed mb-8">{exp.desc}</p>
 
                                 {/* Achievement Bubble Reveal */}
                                 <div className="flex flex-wrap gap-3">
                                     {exp.achievements.map((ach) => (
                                         <div
                                             key={ach}
-                                            className="px-4 py-2 bg-white/5 rounded-full text-[10px] font-black uppercase tracking-widest text-white/50 border border-white/5 hover:bg-blue-500 hover:text-white transition-all cursor-default"
+                                            className="px-4 py-2 bg-gray-50 rounded-full text-[10px] font-black uppercase tracking-widest text-[#86868B] border border-gray-100 hover:bg-[#2997FF] hover:text-white transition-all cursor-default"
                                         >
                                             {ach}
                                         </div>
@@ -179,7 +179,7 @@ export default function ExperienceTimeline() {
 
                             {/* Hovering "Achievement" Popup (v4 Detail) */}
                             {hoveredIndex === i && (
-                                <div className="absolute -right-12 top-0 w-64 p-6 bg-blue-600 text-white rounded-3xl animate-fade-in shadow-2xl z-50">
+                                <div className="absolute -right-12 top-0 w-64 p-6 bg-[#1D1D1F] text-white rounded-3xl animate-fade-in shadow-2xl z-50">
                                     <h4 className="font-black text-sm uppercase mb-2">Key Metric</h4>
                                     <p className="text-xs font-medium leading-tight">Implementing this system led to a total transformation of the internal engineering culture.</p>
                                     <div className="mt-4 flex gap-1">
@@ -197,7 +197,7 @@ export default function ExperienceTimeline() {
             {/* Background Data Stream (Visual Decoration) */}
             <div className="absolute top-0 right-0 h-full w-32 opacity-10 pointer-events-none flex flex-col justify-around items-center">
                 {[...Array(20)].map((_, i) => (
-                    <div key={i} className="font-mono text-[10px] text-white rotate-90">{random(1000, 9999)}ms</div>
+                    <div key={i} className="font-mono text-[10px] text-[#1D1D1F] rotate-90">{random(1000, 9999)}ms</div>
                 ))}
             </div>
         </section>
