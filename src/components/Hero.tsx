@@ -3,40 +3,15 @@
 import React, { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import GSAPText from "./ui/GSAPText";
+import MagneticButton from "./ui/MagneticButton";
 
 export default function Hero() {
     const containerRef = useRef<HTMLDivElement>(null);
-    const titleRef = useRef<HTMLHeadingElement>(null);
-    const subTitleRef = useRef<HTMLParagraphElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
-        if (!containerRef.current || !titleRef.current || !subTitleRef.current || !gridRef.current) return;
-
-        const tl = gsap.timeline();
-
-        // 1. Text Entrance (SplitText-like effect using standard GSAP)
-        // We act on the container, but since we don't have SplitText plugin, we animate the element itself
-        tl.fromTo(titleRef.current,
-            { y: 100, opacity: 0, scale: 0.9 },
-            {
-                y: 0,
-                opacity: 1,
-                scale: 1,
-                duration: 1.5,
-                ease: "power4.out"
-            }
-        )
-            .fromTo(subTitleRef.current,
-                { y: 20, opacity: 0 },
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1,
-                    ease: "power2.out"
-                },
-                "-=1"
-            );
+        if (!containerRef.current || !gridRef.current) return;
 
         // 2. Grid/Particle System Animation
         const cells = gridRef.current.children;
@@ -121,20 +96,39 @@ export default function Hero() {
                 ))}
             </div>
 
-            <div className="z-10 text-center mix-blend-darken relative">
-                <h1
-                    ref={titleRef}
-                    className="text-6xl md:text-9xl font-black mb-4 text-[#1D1D1F] tracking-tight"
-                >
-                    ANIRUDDHA ADAK
-                </h1>
-                <p
-                    ref={subTitleRef}
-                    className="text-xl md:text-2xl text-[#86868B] font-medium tracking-widest uppercase"
-                    style={{ opacity: 0 }}
-                >
-                    Full Stack Developer & AI Engineer
-                </p>
+            <div className="z-10 text-center mix-blend-darken relative flex flex-col items-center gap-6">
+
+                {/* Replaced with GSAPText for per-character animation */}
+                <div className="overflow-hidden">
+                    <GSAPText
+                        text="ANIRUDDHA ADAK"
+                        type="chars"
+                        className="text-6xl md:text-9xl font-black mb-4 text-[#1D1D1F] tracking-tight leading-none"
+                        animation="slide-up"
+                        duration={1.5}
+                        stagger={0.05}
+                    />
+                </div>
+
+                <div className="overflow-hidden">
+                    <GSAPText
+                        text="Full Stack Developer & AI Engineer"
+                        type="words"
+                        className="text-xl md:text-2xl text-[#86868B] font-medium tracking-widest uppercase"
+                        animation="fade"
+                        delay={1}
+                        stagger={0.1}
+                    />
+                </div>
+
+                <div className="mt-8 flex gap-4">
+                    <MagneticButton strength={0.4} className="px-8 py-3 bg-[#1D1D1F] text-white rounded-full font-bold uppercase tracking-widest hover:bg-[#2997FF] transition-colors duration-300">
+                        View Work
+                    </MagneticButton>
+                    <MagneticButton strength={0.2} className="px-8 py-3 border border-[#1D1D1F] text-[#1D1D1F] rounded-full font-bold uppercase tracking-widest hover:bg-[#1D1D1F] hover:text-white transition-colors duration-300">
+                        Contact Me
+                    </MagneticButton>
+                </div>
             </div>
 
             {/* Additional Abstract Blobs for "More Colors" */}

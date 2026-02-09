@@ -1,76 +1,131 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
-import { createLayout } from "animejs/layout";
-import { animate } from "animejs/animation";
-import { spring } from "animejs/easings/spring";
-import { stagger, random } from "animejs/utils";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+import GSAPText from "./ui/GSAPText";
+import MagneticButton from "./ui/MagneticButton";
 
-// Stage 10: Ultra-Detailed Projects Section
-// Features: Layout Module (v4), 3D Flip Cards, Filtering, SVG Overlays, Perspective Transforms
+gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
-    { id: 1, title: "EchoCraft", category: "AI", gradient: "from-pink-500 via-red-500 to-yellow-500", year: "2024", tech: ["Claude API", "Next.js", "Redis"], metrics: "99% Accuracy" },
-    { id: 2, title: "VocalScribe", category: "Web", gradient: "from-blue-400 via-indigo-500 to-purple-500", year: "2023", tech: ["WebSockets", "Node.js", "React"], metrics: "10k+ Users" },
-    { id: 3, title: "SkillSphere", category: "App", gradient: "from-green-400 via-emerald-500 to-teal-500", year: "2023", tech: ["React Native", "Firebase"], metrics: "4.8 Star Rating" },
-    { id: 4, title: "LingoLens", category: "AI", gradient: "from-orange-400 via-orange-500 to-red-500", year: "2022", tech: ["OpenCV", "TensorFlow"], metrics: "Real-time Translation" },
-    { id: 5, title: "Mercato", category: "Web", gradient: "from-indigo-400 via-purple-500 to-pink-500", year: "2022", tech: ["Stripe", "Next.js", "PostgreSQL"], metrics: "$1M+ GMV" },
-    { id: 6, title: "Portfolio", category: "Web", gradient: "from-gray-700 via-gray-900 to-black", year: "2024", tech: ["Anime.js v4", "Next.js"], metrics: "50+ Features" },
+    {
+        id: 1,
+        title: "EchoCraft",
+        category: "AI",
+        gradient: "from-pink-500 via-red-500 to-yellow-500",
+        year: "2024",
+        tech: ["Claude API", "Next.js", "Redis"],
+        metrics: "99% Accuracy",
+        image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800" // AI/Neural
+    },
+    {
+        id: 2,
+        title: "VocalScribe",
+        category: "Web",
+        gradient: "from-blue-400 via-indigo-500 to-purple-500",
+        year: "2023",
+        tech: ["WebSockets", "Node.js", "React"],
+        metrics: "10k+ Users",
+        image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800" // Digital/Waveform
+    },
+    {
+        id: 3,
+        title: "SkillSphere",
+        category: "App",
+        gradient: "from-green-400 via-emerald-500 to-teal-500",
+        year: "2023",
+        tech: ["React Native", "Firebase"],
+        metrics: "4.8 Star Rating",
+        image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=800" // Mobile/App
+    },
+    {
+        id: 4,
+        title: "LingoLens",
+        category: "AI",
+        gradient: "from-orange-400 via-orange-500 to-red-500",
+        year: "2022",
+        tech: ["OpenCV", "TensorFlow"],
+        metrics: "Real-time Translation",
+        image: "https://images.unsplash.com/photo-1535378437327-10eff3b3337f?auto=format&fit=crop&q=80&w=800" // Translation/Global
+    },
+    {
+        id: 5,
+        title: "Mercato",
+        category: "Web",
+        gradient: "from-indigo-400 via-purple-500 to-pink-500",
+        year: "2022",
+        tech: ["Stripe", "Next.js", "PostgreSQL"],
+        metrics: "$1M+ GMV",
+        image: "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&q=80&w=800" // Commerce
+    },
+    {
+        id: 6,
+        title: "Portfolio",
+        category: "Web",
+        gradient: "from-gray-700 via-gray-900 to-black",
+        year: "2024",
+        tech: ["GSAP", "Next.js"],
+        metrics: "50+ Features",
+        image: "https://images.unsplash.com/photo-1545665277-5937a59539fc?auto=format&fit=crop&q=80&w=800" // Abstract/Design
+    },
 ];
 
 export default function ProjectsSection() {
+    // ... existing state and refs ...
     const [filter, setFilter] = useState("All");
     const [flippedId, setFlippedId] = useState<number | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const layoutRef = useRef<ReturnType<typeof createLayout> | null>(null);
+    const bgTextRef = useRef<HTMLDivElement>(null);
 
     const filteredProjects = filter === "All"
         ? projects
         : projects.filter(p => p.category === filter);
 
-    useEffect(() => {
+    useGSAP(() => {
         if (!containerRef.current) return;
 
-        layoutRef.current = createLayout(containerRef.current, {
-            children: '.project-card-container',
-        });
+        // 1. Staggered Entrance (Existing)
+        gsap.fromTo(".project-card-container",
+            { y: 100, opacity: 0, scale: 0.9 },
+            {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                stagger: 0.1,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top 75%",
+                }
+            }
+        );
 
-        // Entrance animation
-        const cards = containerRef.current.querySelectorAll('.project-card-container');
-        animate(cards, {
-            translateY: [100, 0],
-            opacity: [0, 1],
-            scale: [0.9, 1],
-            delay: stagger(100),
-            duration: 1000,
-            ease: 'outExpo'
-        });
-    }, []);
-
-    useLayoutEffect(() => {
-        if (layoutRef.current) {
-            layoutRef.current.animate({
-                duration: 800,
-                ease: spring({ stiffness: 200, damping: 20 }),
+        // 2. Background Text Parallax (Existing)
+        if (bgTextRef.current) {
+            gsap.to(bgTextRef.current, {
+                x: "-20%",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 1,
+                }
             });
         }
-    }, [filteredProjects]);
+
+    }, { scope: containerRef, dependencies: [filter] });
 
     const handleFlip = (id: number, target: HTMLElement) => {
         if (flippedId === id) {
             setFlippedId(null);
-            animate(target, {
-                rotateY: [180, 0],
-                duration: 800,
-                ease: spring({ stiffness: 100, damping: 15 })
-            });
+            gsap.to(target, { rotateY: 0, duration: 0.8, ease: "power3.inOut" });
         } else {
             setFlippedId(id);
-            animate(target, {
-                rotateY: [0, 180],
-                duration: 800,
-                ease: spring({ stiffness: 100, damping: 15 })
-            });
+            gsap.to(target, { rotateY: 180, duration: 0.8, ease: "power3.inOut" });
         }
     };
 
@@ -78,13 +133,21 @@ export default function ProjectsSection() {
         <section id="work" className="min-h-screen w-full bg-[#F5F5F7] py-32 text-[#1D1D1F] relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 pointer-events-none mix-blend-multiply"></div>
 
-            <div className="max-w-7xl mx-auto px-6 relative z-10">
+            <div ref={containerRef} className="max-w-7xl mx-auto px-6 relative z-10">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
                     <div>
-                        <h2 className="text-7xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-4 text-[#1D1D1F]">
-                            SELECTED <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#86868B] via-[#2997FF] to-[#AF52DE]">WORKS</span>
-                        </h2>
-                        <p className="text-[#86868B] font-mono tracking-widest text-sm uppercase">Curated Digital Architecture [2022-2024]</p>
+                        <GSAPText
+                            text="SELECTED WORKS"
+                            type="chars"
+                            className="text-7xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-4 text-[#1D1D1F]"
+                            animation="slide-up"
+                        />
+                        <GSAPText
+                            text="Curated Digital Architecture [2022-2024]"
+                            type="words"
+                            className="text-[#86868B] font-mono tracking-widest text-sm uppercase"
+                            animation="fade"
+                        />
                     </div>
 
                     <div className="flex gap-2 bg-white p-2 rounded-full border border-gray-200 shadow-sm">
@@ -103,10 +166,7 @@ export default function ProjectsSection() {
                     </div>
                 </div>
 
-                <div
-                    ref={containerRef}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
-                >
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 min-h-[800px]">
                     {filteredProjects.map((project) => (
                         <div
                             key={project.id}
@@ -119,19 +179,29 @@ export default function ProjectsSection() {
                             >
                                 {/* Front Face */}
                                 <div
-                                    className={`absolute inset-0 w-full h-full backface-hidden rounded-3xl overflow-hidden bg-gradient-to-br ${project.gradient} p-10 flex flex-col justify-end shadow-2xl border border-white/10`}
+                                    className={`absolute inset-0 w-full h-full backface-hidden rounded-3xl overflow-hidden shadow-2xl border border-white/10 group`}
                                 >
-                                    <div className="absolute top-8 right-8 text-[0.6rem] font-black uppercase tracking-[0.4em] text-white/40">
-                                        System № {project.id.toString().padStart(2, '0')}
-                                    </div>
-                                    <span className="text-xs font-mono mb-2 text-white/70 uppercase tracking-widest bg-white/10 w-fit px-3 py-1 rounded-full backdrop-blur-sm z-10">{project.category}</span>
-                                    <h3 className="text-4xl font-black leading-tight drop-shadow-xl z-10 text-white">{project.title}</h3>
-
-                                    {/* Abstract Animated Shapes */}
+                                    {/* Image Background */}
                                     <div
-                                        className="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl transition-transform duration-1000 group-hover:scale-150"
-                                        style={{ transform: `rotate(${random(0, 360)}deg)` }}
+                                        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                                        style={{ backgroundImage: `url(${project.image})` }}
                                     />
+                                    {/* Gradient Overlay - Reduced Opacity for Visibility */}
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-40 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-30`} />
+                                    <div className="absolute inset-0 bg-black/10" />
+
+                                    <div className="absolute inset-0 p-10 flex flex-col justify-end">
+                                        <div className="absolute top-8 right-8 text-[0.6rem] font-black uppercase tracking-[0.4em] text-white/60">
+                                            System № {project.id.toString().padStart(2, '0')}
+                                        </div>
+                                        <span className="text-xs font-mono mb-2 text-white/90 uppercase tracking-widest bg-black/20 w-fit px-3 py-1 rounded-full backdrop-blur-sm z-10 border border-white/10">{project.category}</span>
+                                        <h3 className="text-4xl font-black leading-tight drop-shadow-xl z-10 text-white translate-y-2 group-hover:translate-y-0 transition-transform duration-500">{project.title}</h3>
+
+                                        {/* Abstract Animated Shapes (Removed for cleaner image look, or reduced) */}
+                                        <div
+                                            className="absolute -right-20 -top-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"
+                                        />
+                                    </div>
                                 </div>
 
                                 {/* Back Face */}
@@ -139,9 +209,15 @@ export default function ProjectsSection() {
                                     className="absolute inset-0 w-full h-full backface-hidden rounded-3xl bg-white border border-gray-100 p-10 flex flex-col text-left overflow-hidden shadow-2xl"
                                     style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
                                 >
-                                    <div className="mb-8">
+                                    {/* Back Face Background (Subtle) */}
+                                    <div
+                                        className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none grayscale"
+                                        style={{ backgroundImage: `url(${project.image})` }}
+                                    />
+
+                                    <div className="mb-8 relative z-10">
                                         <span className="text-[0.6rem] font-black tracking-widest text-[#86868B] uppercase">Architecture Breakdown</span>
-                                        <h4 className="text-3xl font-black mt-2 text-[#2997FF]">{project.title}</h4>
+                                        <h4 className="text-3xl font-black mt-2 text-transparent bg-clip-text bg-gradient-to-r from-[#1D1D1F] to-[#2997FF]">{project.title}</h4>
                                     </div>
 
                                     <div className="space-y-6 flex-1">
@@ -161,9 +237,9 @@ export default function ProjectsSection() {
 
                                     <div className="pt-6 border-t border-gray-100 flex justify-between items-center">
                                         <span className="text-2xl font-black italic text-[#1D1D1F]">{project.year}</span>
-                                        <button className="px-6 py-2 bg-[#1D1D1F] text-white text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-[#2997FF] hover:text-white transition-colors">
+                                        <MagneticButton className="px-6 py-2 bg-[#1D1D1F] text-white text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-[#2997FF] hover:text-white transition-colors">
                                             Case Study →
-                                        </button>
+                                        </MagneticButton>
                                     </div>
                                 </div>
                             </div>
@@ -173,18 +249,9 @@ export default function ProjectsSection() {
             </div>
 
             {/* Background Text Scroller */}
-            <div className="absolute top-1/2 left-0 w-full opacity-[0.03] -translate-y-1/2 pointer-events-none -rotate-12 scale-150 whitespace-nowrap overflow-hidden">
-                <span className="text-[#1D1D1F] text-[20vw] font-black uppercase">SYSTEMS • INTERFACES • ARCHITECTURES • </span>
+            <div ref={bgTextRef} className="absolute top-1/2 left-0 w-[200%] opacity-[0.03] -translate-y-1/2 pointer-events-none -rotate-12 scale-150 whitespace-nowrap overflow-hidden">
                 <span className="text-[#1D1D1F] text-[20vw] font-black uppercase">SYSTEMS • INTERFACES • ARCHITECTURES • </span>
             </div>
         </section>
     );
 }
-
-// Add CSS for backface-hidden
-const styles = `
-.backface-hidden {
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-}
-`;

@@ -15,6 +15,7 @@ const experiences = [
         desc: "Architecting high-fidelity motion systems for global enterprise applications.",
         achievements: ["Reduced bundle size by 40%", "Implemented v4 Animation Engine", "Led a team of 12"],
         color: "#3b82f6",
+        image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800" // Architecture/Skyscraper
     },
     {
         year: "2023",
@@ -23,6 +24,7 @@ const experiences = [
         desc: "Devised distributed serverless architectures that scaled to 2M+ active users.",
         achievements: ["99.99% Uptime", "Zero-downtime migrations", "AWS Cost reduction of 30%"],
         color: "#8b5cf6",
+        image: "https://images.unsplash.com/photo-1544197150-b99a580bbcbf?auto=format&fit=crop&q=80&w=800" // Server/Data Center
     },
     {
         year: "2022",
@@ -31,6 +33,7 @@ const experiences = [
         desc: "Integrated Large Language Models into medical diagnostic workflows.",
         achievements: ["Patent for AI triage", "First 50 customers signed", "Y-Combinator W22"],
         color: "#ec4899",
+        image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800" // Medical/Tech
     },
 ];
 
@@ -123,31 +126,41 @@ export default function ExperienceTimeline() {
                             key={exp.company}
                             className="exp-card group relative"
                         >
-                            <span className="text-8xl font-black text-gray-200 absolute -top-16 -left-8 pointer-events-none select-none">
+                            <span className="text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-gray-100 to-gray-200 absolute -top-16 -left-8 pointer-events-none select-none z-0">
                                 {exp.year}
                             </span>
 
-                            <div className="relative z-10 p-10 rounded-[2rem] bg-white border border-gray-100 shadow-xl hover:shadow-2xl transition-all">
-                                <div className="flex items-center gap-4 mb-4">
-                                    <div className="w-12 h-12 rounded-full border-2 border-[#2997FF] flex items-center justify-center font-bold text-[#2997FF] bg-blue-50">
-                                        {exp.company[0]}
-                                    </div>
-                                    <div>
-                                        <h3 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#1D1D1F] to-[#555]">{exp.role}</h3>
-                                        <p className="text-[#2997FF] font-mono text-sm tracking-tighter uppercase">{exp.company}</p>
-                                    </div>
-                                </div>
-                                <p className="text-[#86868B] text-lg leading-relaxed mb-8">{exp.desc}</p>
+                            <div className="relative z-10 p-10 rounded-[2rem] bg-white border border-gray-100 shadow-xl hover:shadow-2xl transition-all overflow-hidden group-hover:scale-[1.02] duration-500">
+                                {/* Background Image with Overlay - NOW VISIBLE */}
+                                <div
+                                    className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none grayscale-[20%]"
+                                    style={{ backgroundImage: `url(${exp.image})` }}
+                                />
+                                {/* subtle gradient overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-white/95 to-white/70 pointer-events-none" />
 
-                                <div className="flex flex-wrap gap-3">
-                                    {exp.achievements.map((ach) => (
-                                        <div
-                                            key={ach}
-                                            className="px-4 py-2 bg-gray-50 rounded-full text-[10px] font-black uppercase tracking-widest text-[#86868B] border border-gray-100 hover:bg-[#2997FF] hover:text-white transition-all cursor-default"
-                                        >
-                                            {ach}
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <div className="w-12 h-12 rounded-full border-2 border-[#2997FF] flex items-center justify-center font-bold text-[#2997FF] bg-blue-50 shadow-sm">
+                                            {exp.company[0]}
                                         </div>
-                                    ))}
+                                        <div>
+                                            <h3 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#1D1D1F] to-[#2997FF] mb-1">{exp.role}</h3>
+                                            <p className="text-[#2997FF] font-mono text-sm tracking-tighter uppercase font-bold">{exp.company}</p>
+                                        </div>
+                                    </div>
+                                    <p className="text-[#1D1D1F] text-lg leading-relaxed mb-8 font-medium">{exp.desc}</p>
+
+                                    <div className="flex flex-wrap gap-3">
+                                        {exp.achievements.map((ach) => (
+                                            <div
+                                                key={ach}
+                                                className="px-4 py-2 bg-gray-50 rounded-full text-[10px] font-black uppercase tracking-widest text-[#86868B] border border-gray-100 hover:bg-[#2997FF] hover:text-white transition-all cursor-default"
+                                            >
+                                                {ach}
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
 
