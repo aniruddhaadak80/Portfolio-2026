@@ -62,13 +62,10 @@ export default function ExperienceTimeline() {
         const scroll = onScroll({
             target: sectionRef.current,
             onUpdate: (self) => {
-                const progress = self.progress;
-                const d = drawable as any;
-                if (Array.isArray(d)) {
-                    d.forEach(item => item.set({ pathLength: progress }));
-                } else if (d && typeof d.set === 'function') {
-                    d.set({ pathLength: progress });
-                }
+                animate(drawable, {
+                    pathLength: self.progress,
+                    duration: 0
+                });
             }
         });
 
