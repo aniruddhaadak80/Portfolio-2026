@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Aniruddha Adak | Animated Portfolio 2026 🚀
 
-## Getting Started
+> A "Portfolio of the Future" exhibiting the cutting-edge capabilities of **Anime.js v4** and **Next.js**. 
+> Designed with an "Engineer-Editorial" aesthetic, featuring fluid physics-based motion, FLIP transitions, and immersive SVG animations.
 
-First, run the development server:
+![Portfolio Preview](https://via.placeholder.com/800x400.png?text=Portfolio+Preview)
+
+## ✨ Features
+
+This portfolio integrates over **50+ Anime.js v4 features** across 7 unique interactive sections:
+
+### 1. **Hero Section**
+- **Effect**: Elastic Text Splitting & Mouse Parallax.
+- **Tech**: `stagger(grid)`, `spring(1, 80, 10, 0)`, `WAAPI` for hardware-accelerated 3D transforms.
+
+### 2. **About Me**
+- **Effect**: Scroll-triggered Animated Stats.
+- **Tech**: `onScroll`, `round()` utility for number counting, dynamic color interpolation.
+
+### 3. **Skills (The Periodic Table)**
+- **Effect**: Interactive Grid with Shuffle & Regroup.
+- **Tech**: `stagger(grid)`, `spring` physics, SVG Logo integration.
+
+### 4. **Experience Timeline**
+- **Effect**: Self-drawing SVG path synced to scroll position.
+- **Tech**: `createDrawable`, `onScroll` triggers, Diverse Easings (`spring`, `elastic`, `steps`, `quad`).
+- **Responsive**: Fully optimized for mobile with adaptive layout.
+
+### 5. **Projects Overlay**
+- **Effect**: 3D FLIP Grid & Hover Reveals.
+- **Tech**: **`createLayout`** (v4 Layout Module) for seamless filtering transitions, CSS Gradients, Abstract Shape Overlays.
+
+### 6. **The Lab**
+- **Effect**: Physics-based Draggable Playground.
+- **Tech**: `createDraggable` (v4), `snap` to grid, inertia throwing.
+
+### 7. **Contact**
+- **Effect**: Magnetic Buttons & Particle System.
+- **Tech**: `mapRange`, `createSeededRandom`, `damp` for smooth cursor tracking.
+
+### ⚡ Global Polish
+- **Custom Cursor**: Fluid follower using `lerp` and `damp`.
+- **Navigation**: Full-screen curtain reveal using `clipPath` animation.
+- **Performance**: Optimized with `will-change` properties and efficient `useEffect` cleanup.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 15+](https://nextjs.org/) (App Router)
+- **Animation**: [Anime.js v4](https://animejs.com/) (Release Candidate)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Deployment**: [Vercel](https://vercel.com/) / [Netlify](https://www.netlify.com/)
+
+---
+
+## 🚀 Getting Started
+
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/aniruddhaadak80/Portfolio-2026.git
+    cd Portfolio-2026
+    ```
+
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    # or
+    yarn install
+    # or
+    pnpm install
+    ```
+
+3.  **Run the development server**:
+    ```bash
+    npm run dev
+    ```
+
+4.  **Open in Browser**:
+    Visit [http://localhost:3000](http://localhost:3000) (or 3001/3002 if port is busy).
+
+---
+
+## 📦 Build for Production
+
+To create an optimized production build:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ☁️ Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Deploying to Vercel (Recommended)
 
-## Learn More
+1.  Push your code to GitHub.
+2.  Go to [Vercel.com](https://vercel.com) and sign up/login.
+3.  Click **"Add New..."** -> **"Project"**.
+4.  Import the `Portfolio-2026` repository.
+5.  Keep default settings (Next.js preset).
+6.  Click **"Deploy"**.
 
-To learn more about Next.js, take a look at the following resources:
+### Deploying to Netlify
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1.  Go to [Netlify.com](https://netlify.com).
+2.  "Add new site" -> "Import an existing project".
+3.  Connect GitHub and select `Portfolio-2026`.
+4.  Build command: `npm run build`
+5.  Publish directory: `.next` (or let Netlify auto-detect Next.js).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📄 License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT License © 2026 Aniruddha Adak
