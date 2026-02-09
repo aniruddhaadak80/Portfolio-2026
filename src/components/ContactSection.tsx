@@ -1,203 +1,201 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { animate } from "animejs/animation";
-import { createTimeline } from "animejs/timeline";
-import { mapRange, damp, createSeededRandom } from "animejs/utils";
 import { spring } from "animejs/easings/spring";
+import { stagger, random } from "animejs/utils";
+import { createTimeline } from "animejs/timeline";
 
-// Stage 6: Contact & Footer
-// Improved: Functional form look, better particle system, responsive layout
+// Stage 12: Holographic Contact Section
+// Features: Magnetic Icons, Particle Focus, Spring Recoil, Procedural Success
+
+const socialLinks = [
+    { name: "GitHub", icon: "🌐", url: "#" },
+    { name: "LinkedIn", icon: "🔗", url: "#" },
+    { name: "Twitter", icon: "🐦", url: "#" },
+    { name: "Email", icon: "✉️", url: "#" },
+];
 
 export default function ContactSection() {
     const sectionRef = useRef<HTMLElement>(null);
-    const buttonRef = useRef<HTMLButtonElement>(null);
-    const particlesRef = useRef<HTMLDivElement>(null);
-    const [formState, setFormState] = useState<'idle' | 'sending' | 'sent'>('idle');
-
-    // Form refs
-    const nameRef = useRef<HTMLInputElement>(null);
-    const emailRef = useRef<HTMLInputElement>(null);
-    const messageRef = useRef<HTMLTextAreaElement>(null);
+    const formRef = useRef<HTMLFormElement>(null);
+    const particleContainerRef = useRef<HTMLDivElement>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
-        if (!buttonRef.current || !particlesRef.current) return;
+        if (!sectionRef.current) return;
 
-        const button = buttonRef.current;
-
-        // Magnetic button effect using mapRange and damp
-        const handleMouseMove = (e: MouseEvent) => {
-            const buttonBounds = button.getBoundingClientRect();
-            const x = e.clientX - buttonBounds.left - buttonBounds.width / 2;
-            const y = e.clientY - buttonBounds.top - buttonBounds.height / 2;
-
-            // Map mouse position to smaller movement range
-            const moveX = mapRange(x, -buttonBounds.width / 2, buttonBounds.width / 2, -15, 15);
-            const moveY = mapRange(y, -buttonBounds.height / 2, buttonBounds.height / 2, -10, 10);
-
-            animate(button, {
-                translateX: moveX,
-                translateY: moveY,
-                duration: 100,
-                ease: 'outQuad',
-            });
-        };
-
-        const handleMouseLeave = () => {
-            animate(button, {
-                translateX: 0,
-                translateY: 0,
-                duration: 400,
-                ease: spring({ stiffness: 200, damping: 15 }),
-            });
-        };
-
-        button.addEventListener('mousemove', handleMouseMove);
-        button.addEventListener('mouseleave', handleMouseLeave);
-
-        // Create seeded random particles
-        const seededRandom = createSeededRandom(12345);
-        const particles = particlesRef.current.querySelectorAll('.particle');
-
-        particles.forEach((particle) => {
-            const x = seededRandom() * 100;
-            const y = seededRandom() * 100;
-            const size = seededRandom() * 3 + 1;
-            const delay = seededRandom() * 5000;
-            const duration = 3000 + seededRandom() * 2000;
-
-            (particle as HTMLElement).style.left = `${x}%`;
-            (particle as HTMLElement).style.top = `${y}%`;
-            (particle as HTMLElement).style.width = `${size}px`;
-            (particle as HTMLElement).style.height = `${size}px`;
-
-            animate(particle, {
-                translateY: ['0px', '-100px'],
-                opacity: [0, 0.5, 0],
-                duration: duration,
-                delay: delay,
-                loop: true,
-                ease: 'linear',
-            });
+        // Entrance animation
+        animate(sectionRef.current.querySelectorAll('.contact-element'), {
+            opacity: [0, 1],
+            translateY: [50, 0],
+            delay: stagger(100),
+            duration: 1000,
+            ease: 'outExpo'
         });
 
-        return () => {
-            button.removeEventListener('mousemove', handleMouseMove);
-            button.removeEventListener('mouseleave', handleMouseLeave);
-        };
+        // Initialize particles
+        if (particleContainerRef.current) {
+            const particles = particleContainerRef.current.querySelectorAll('.particle');
+            animate(particles, {
+                translateX: () => random(-20, 20),
+                translateY: () => random(-20, 20),
+                opacity: [0.1, 0.4],
+                scale: () => random(0.5, 1.5),
+                duration: () => random(2000, 4000),
+                loop: true,
+                alternate: true,
+                ease: 'easeInOutQuad'
+            });
+        }
     }, []);
 
-    const handleInputFocus = (target: HTMLElement) => {
+    const handleMouseMove = (e: React.MouseEvent, target: HTMLElement) => {
+        const { left, top, width, height } = target.getBoundingClientRect();
+        const centerX = left + width / 2;
+        const centerY = top + height / 2;
+        const moveX = (e.clientX - centerX) / 2;
+        const moveY = (e.clientY - centerY) / 2;
+
         animate(target, {
-            scale: 1.02,
-            borderColor: 'rgba(255, 255, 255, 0.5)',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            duration: 300,
+            translateX: moveX,
+            translateY: moveY,
+            duration: 200,
+            ease: 'outExpo'
         });
     };
 
-    const handleInputBlur = (target: HTMLElement) => {
+    const handleMouseLeave = (target: HTMLElement) => {
         animate(target, {
-            scale: 1,
-            borderColor: 'rgba(255, 255, 255, 0.1)',
-            backgroundColor: 'rgba(255, 255, 255, 0.05)',
-            duration: 300,
+            translateX: 0,
+            translateY: 0,
+            duration: 800,
+            ease: spring({ stiffness: 200, damping: 10 })
         });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setFormState('sending');
+        setIsSubmitting(true);
 
-        // Simulate send
-        setTimeout(() => {
-            setFormState('sent');
-
-            // Animation success
-            if (buttonRef.current) {
-                animate(buttonRef.current, {
-                    scale: [1, 1.1, 1],
-                    backgroundColor: ['#3b82f6', '#10b981'], // blue to green
-                    duration: 600,
-                    ease: 'outElastic(1, .5)',
-                });
+        // Procedural Success Sequence
+        const tl = createTimeline({
+            onComplete: () => {
+                setIsSubmitting(false);
+                setIsSubmitted(true);
             }
-        }, 1500);
+        });
+
+        tl.add(formRef.current!, {
+            scale: 0.95,
+            opacity: 0.5,
+            duration: 400,
+            ease: 'inExpo'
+        })
+            .add(formRef.current!, {
+                scale: 1,
+                opacity: 1,
+                duration: 800,
+                ease: spring({ stiffness: 100, damping: 10 })
+            });
     };
 
     return (
         <section
             ref={sectionRef}
-            id="contact"
-            className="min-h-screen w-full flex flex-col justify-center items-center relative overflow-hidden bg-black py-20"
+            className="min-h-screen w-full bg-black py-40 flex flex-col items-center justify-center relative overflow-hidden px-6"
         >
-            {/* Background particles */}
-            <div ref={particlesRef} className="absolute inset-0 pointer-events-none">
-                {Array.from({ length: 30 }).map((_, i) => (
+            {/* Particle Field Background */}
+            <div ref={particleContainerRef} className="absolute inset-0 pointer-events-none opacity-30">
+                {[...Array(40)].map((_, i) => (
                     <div
                         key={i}
-                        className="particle absolute rounded-full bg-blue-500/30"
+                        className="particle absolute w-1 h-1 bg-blue-500 rounded-full"
+                        style={{
+                            top: `${random(0, 100)}%`,
+                            left: `${random(0, 100)}%`,
+                        }}
                     />
                 ))}
             </div>
 
-            <div className="relative z-10 w-full max-w-2xl px-6">
-                <h2 className="text-4xl md:text-7xl font-bold mb-4 text-center">
-                    Let&apos;s Talk
+            <div className="max-w-4xl w-full relative z-10 text-center">
+                <h2 className="contact-element text-7xl md:text-9xl font-black uppercase tracking-tighter mb-4 text-white">
+                    LET'S <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">TALK.</span>
                 </h2>
-                <p className="text-xl text-gray-400 mb-12 text-center">
-                    Got an idea? I&apos;m ready to build it.
-                </p>
+                <p className="contact-element text-gray-500 font-mono tracking-widest text-sm uppercase mb-20 italic">Architecting the next digital era</p>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <input
-                            ref={nameRef}
-                            type="text"
-                            placeholder="Name"
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white placeholder-gray-500 focus:outline-none transition-colors"
-                            onFocus={(e) => handleInputFocus(e.target)}
-                            onBlur={(e) => handleInputBlur(e.target)}
-                            required
-                        />
-                        <input
-                            ref={emailRef}
-                            type="email"
-                            placeholder="Email"
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white placeholder-gray-500 focus:outline-none transition-colors"
-                            onFocus={(e) => handleInputFocus(e.target)}
-                            onBlur={(e) => handleInputBlur(e.target)}
-                            required
-                        />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-start text-left">
+
+                    {/* Left: Info & Socials */}
+                    <div className="space-y-12">
+                        <div className="contact-element">
+                            <span className="text-[10px] font-black tracking-widest text-white/30 uppercase block mb-4">Direct Channel</span>
+                            <a href="mailto:hello@aniruddha.dev" className="text-3xl font-black hover:text-blue-500 transition-colors">hello@aniruddha.dev</a>
+                        </div>
+
+                        <div className="contact-element">
+                            <span className="text-[10px] font-black tracking-widest text-white/30 uppercase block mb-6">Coordinate Hub</span>
+                            <div className="grid grid-cols-2 gap-4">
+                                {socialLinks.map((link) => (
+                                    <a
+                                        key={link.name}
+                                        href={link.url}
+                                        onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
+                                        onMouseLeave={(e) => handleMouseLeave(e.currentTarget)}
+                                        className="group relative p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/30 transition-all flex items-center gap-4 overflow-hidden"
+                                    >
+                                        <span className="text-2xl">{link.icon}</span>
+                                        <span className="font-bold text-xs uppercase tracking-widest">{link.name}</span>
+                                        <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                    <textarea
-                        ref={messageRef}
-                        placeholder="Tell me about your project..."
-                        rows={5}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white placeholder-gray-500 focus:outline-none transition-colors resize-none"
-                        onFocus={(e) => handleInputFocus(e.target)}
-                        onBlur={(e) => handleInputBlur(e.target)}
-                        required
-                    />
 
-                    <div className="flex justify-center mt-8">
+                    {/* Right: Holographic Form */}
+                    <form
+                        ref={formRef}
+                        onSubmit={handleSubmit}
+                        className="contact-element relative p-10 rounded-[3rem] bg-gradient-to-br from-white/5 to-transparent border border-white/10 backdrop-blur-3xl shadow-2xl space-y-6 overflow-hidden"
+                    >
+                        {/* Animated Border Glow */}
+                        <div className="absolute -top-[100%] -left-[100%] w-[300%] h-[300%] bg-gradient-conic from-blue-500/0 via-blue-500/20 to-blue-500/0 animate-spin-slow pointer-events-none" />
+
+                        <div>
+                            <input
+                                type="text"
+                                placeholder="IDENTIFIER"
+                                className="w-full bg-black/40 border border-white/5 rounded-2xl p-5 font-mono text-xs uppercase tracking-widest focus:border-blue-500 outline-none transition-all focus:shadow-[0_0_20px_rgba(59,130,246,0.3)] placeholder:text-white/20"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <textarea
+                                placeholder="MESSAGE PAYLOAD"
+                                rows={4}
+                                className="w-full bg-black/40 border border-white/5 rounded-2xl p-5 font-mono text-xs uppercase tracking-widest focus:border-blue-500 outline-none transition-all focus:shadow-[0_0_20px_rgba(59,130,246,0.3)] placeholder:text-white/20"
+                                required
+                            />
+                        </div>
+
                         <button
-                            ref={buttonRef}
                             type="submit"
-                            disabled={formState !== 'idle'}
-                            className="px-12 py-5 bg-blue-600 rounded-full text-lg font-bold hover:shadow-lg hover:shadow-blue-500/25 transition-all w-full md:w-auto"
+                            disabled={isSubmitting || isSubmitted}
+                            className="w-full py-5 bg-white text-black font-black uppercase tracking-[0.3em] rounded-2xl overflow-hidden relative group hover:scale-105 active:scale-95 transition-all text-sm"
                         >
-                            {formState === 'idle' ? 'Send Message' : formState === 'sending' ? 'Sending...' : 'Sent!'}
+                            <span className="relative z-10">{isSubmitted ? "TRANSMISSION SENT" : isSubmitting ? "TRANSMITTING..." : "INITIALIZE CONTACT"}</span>
+                            <div className="absolute inset-0 bg-blue-500 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out" />
                         </button>
-                    </div>
-                </form>
-
-                {/* Social Links */}
-                <div className="mt-20 flex gap-8 justify-center border-t border-white/10 pt-8">
-                    <a href="#" className="text-gray-400 hover:text-white transition-colors uppercase text-sm tracking-widest">GitHub</a>
-                    <a href="#" className="text-gray-400 hover:text-white transition-colors uppercase text-sm tracking-widest">LinkedIn</a>
-                    <a href="#" className="text-gray-400 hover:text-white transition-colors uppercase text-sm tracking-widest">Twitter</a>
+                    </form>
                 </div>
+            </div>
+
+            {/* Footer Tag */}
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-mono text-white/20 tracking-[1em] uppercase">
+                Aniruddha Adak © 2026 // System Pulse: Online
             </div>
         </section>
     );
