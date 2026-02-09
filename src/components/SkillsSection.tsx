@@ -124,7 +124,7 @@ export default function SkillsSection() {
                 {/* Grid Column */}
                 <div className="flex-1">
                     <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-12 text-[#1D1D1F]">
-                        THE <span className="text-[#2997FF]">ENGINE</span>
+                        THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9500] to-[#E0F2FE]">ENGINE</span>
                     </h2>
 
                     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 perspective-1000">

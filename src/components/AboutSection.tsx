@@ -122,7 +122,7 @@ export default function AboutSection() {
                 {/* Text Content */}
                 <div ref={bioRef} className="space-y-8">
                     <h2 className="text-5xl md:text-7xl font-bold text-[#1D1D1F] leading-tight">
-                        Crafting <span className="text-[#2997FF]">Digital</span> <br /> Experiences
+                        Crafting <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2997FF] to-[#AF52DE] animate-pulse">Digital</span> <br /> Experiences
                     </h2>
                     <div className="text-lg md:text-xl text-[#86868B] leading-relaxed space-y-6">
                         <p>
@@ -134,8 +134,14 @@ export default function AboutSection() {
                     </div>
 
                     <div className="flex gap-4 pt-8">
-                        {['Innovation', 'Precision', 'Scale'].map((tag) => (
-                            <span key={tag} className="px-6 py-2 rounded-full border border-[#1D1D1F] text-[#1D1D1F] font-medium tracking-wide hover:bg-[#1D1D1F] hover:text-white transition-colors cursor-default">
+                        {['Innovation', 'Precision', 'Scale'].map((tag, i) => (
+                            <span
+                                key={tag}
+                                className={`px-6 py-2 rounded-full border border-[#1D1D1F] font-medium tracking-wide transition-all cursor-default hover:text-white hover:border-transparent ${i === 0 ? 'hover:bg-[#FF2D55]' :
+                                        i === 1 ? 'hover:bg-[#2997FF]' :
+                                            'hover:bg-[#34C759]'
+                                    }`}
+                            >
                                 {tag}
                             </span>
                         ))}

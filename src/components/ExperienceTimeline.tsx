@@ -158,7 +158,7 @@ export default function ExperienceTimeline() {
                                         {exp.company[0]}
                                     </div>
                                     <div>
-                                        <h3 className="text-3xl font-black text-[#1D1D1F]">{exp.role}</h3>
+                                        <h3 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#1D1D1F] to-[#555]">{exp.role}</h3>
                                         <p className="text-[#2997FF] font-mono text-sm tracking-tighter uppercase">{exp.company}</p>
                                     </div>
                                 </div>

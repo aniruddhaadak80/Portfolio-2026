@@ -82,7 +82,7 @@ export default function ProjectsSection() {
                 <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
                     <div>
                         <h2 className="text-7xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-4 text-[#1D1D1F]">
-                            SELECTED <span className="text-[#86868B]">WORKS</span>
+                            SELECTED <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#86868B] via-[#2997FF] to-[#AF52DE]">WORKS</span>
                         </h2>
                         <p className="text-[#86868B] font-mono tracking-widest text-sm uppercase">Curated Digital Architecture [2022-2024]</p>
                     </div>

@@ -20,6 +20,7 @@ export default function ContactSection() {
     const sectionRef = useRef<HTMLElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
     const particleContainerRef = useRef<HTMLDivElement>(null);
+    const socialLinksRef = useRef<HTMLDivElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -121,34 +122,38 @@ export default function ContactSection() {
                 ))}
             </div>
 
-            <div className="max-w-4xl w-full relative z-10 text-center">
+            <div className="max-w-6xl w-full relative z-10 text-center">
                 <h2 className="contact-element text-7xl md:text-9xl font-black uppercase tracking-tighter mb-4 text-[#1D1D1F]">
-                    LET'S <span className="text-[#2997FF]">TALK.</span>
+                    LET'S <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2997FF] via-[#AF52DE] to-[#FF2D55]">TALK.</span>
                 </h2>
                 <p className="contact-element text-[#86868B] font-mono tracking-widest text-sm uppercase mb-20 italic">Architecting the next digital era</p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-start text-left">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start text-left">
 
                     {/* Left: Info & Socials */}
                     <div className="space-y-12">
                         <div className="contact-element">
                             <span className="text-[10px] font-black tracking-widest text-[#86868B]/60 uppercase block mb-4">Direct Channel</span>
-                            <a href="mailto:hello@aniruddha.dev" className="text-3xl font-black text-[#1D1D1F] hover:text-[#2997FF] transition-colors">hello@aniruddha.dev</a>
+                            <a href="mailto:aniruddhaadak80@gmail.com" className="text-2xl md:text-3xl font-black text-[#1D1D1F] hover:text-[#2997FF] transition-colors break-all">aniruddhaadak80@gmail.com</a>
                         </div>
 
                         <div className="contact-element">
                             <span className="text-[10px] font-black tracking-widest text-[#86868B]/60 uppercase block mb-6">Coordinate Hub</span>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div ref={socialLinksRef} className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 {socialLinks.map((link) => (
                                     <a
                                         key={link.name}
                                         href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
                                         onMouseLeave={(e) => handleMouseLeave(e.currentTarget)}
-                                        className="group relative p-6 rounded-2xl bg-white border border-gray-200 hover:border-[#2997FF]/30 transition-all flex items-center gap-4 overflow-hidden shadow-sm hover:shadow-md"
+                                        className="social-link-item group relative p-4 rounded-xl bg-white border border-gray-200 hover:border-[#2997FF]/30 transition-all flex flex-col items-center justify-center gap-2 overflow-hidden shadow-sm hover:shadow-md aspect-square opacity-0" // Added opacity-0 for animation
                                     >
-                                        <span className="text-2xl">{link.icon}</span>
-                                        <span className="font-bold text-xs uppercase tracking-widest text-[#1D1D1F]">{link.name}</span>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[#1D1D1F] group-hover:text-[#2997FF] transition-colors">
+                                            {link.icon}
+                                        </svg>
+                                        <span className="font-bold text-[10px] uppercase tracking-widest text-[#1D1D1F] text-center">{link.name}</span>
                                         <div className="absolute inset-0 bg-[#2997FF]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                     </a>
                                 ))}
@@ -160,7 +165,7 @@ export default function ContactSection() {
                     <form
                         ref={formRef}
                         onSubmit={handleSubmit}
-                        className="contact-element relative p-10 rounded-[3rem] bg-white border border-gray-100 shadow-2xl space-y-6 overflow-hidden"
+                        className="contact-element relative p-10 rounded-[3rem] bg-white border border-gray-100 shadow-xl space-y-6 overflow-hidden"
                     >
                         {/* Animated Border Glow - Subtle for light mode */}
                         <div className="absolute -top-[100%] -left-[100%] w-[300%] h-[300%] bg-gradient-conic from-[#2997FF]/0 via-[#2997FF]/10 to-[#2997FF]/0 animate-spin-slow pointer-events-none" />
@@ -188,14 +193,14 @@ export default function ContactSection() {
                             className="w-full py-5 bg-[#1D1D1F] text-white font-black uppercase tracking-[0.3em] rounded-2xl overflow-hidden relative group hover:scale-105 active:scale-95 transition-all text-sm"
                         >
                             <span className="relative z-10">{isSubmitted ? "TRANSMISSION SENT" : isSubmitting ? "TRANSMITTING..." : "INITIALIZE CONTACT"}</span>
-                            <div className="absolute inset-0 bg-[#2997FF] -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#2997FF] to-[#AF52DE] -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out" />
                         </button>
                     </form>
                 </div>
             </div>
 
             {/* Footer Tag */}
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-mono text-[#86868B] tracking-[1em] uppercase">
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-mono text-[#86868B] tracking-[1em] uppercase whitespace-nowrap">
                 Aniruddha Adak © 2026 // System Pulse: Online
             </div>
         </section>
