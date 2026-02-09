@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { createTimeline } from "animejs/timeline";
-import { animate } from "animejs/animation";
-import { stagger, random } from "animejs/utils";
-import { spring } from "animejs/easings/spring";
+import React, { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 export default function Hero() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -12,56 +10,88 @@ export default function Hero() {
     const subTitleRef = useRef<HTMLParagraphElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
+    useGSAP(() => {
         if (!containerRef.current || !titleRef.current || !subTitleRef.current || !gridRef.current) return;
 
-        const tl = createTimeline();
+        const tl = gsap.timeline();
 
-        // 1. Text Entrance
-        tl.add(titleRef.current, {
-            translateY: [100, 0],
-            opacity: [0, 1],
-            duration: 1000,
-            ease: spring({ stiffness: 100, damping: 12 }),
-        })
-            .add(subTitleRef.current, {
-                translateY: [50, 0],
-                opacity: [0, 1],
-                duration: 800,
-                delay: 200,
-                ease: 'outExpo',
-            }, '-=600');
+        // 1. Text Entrance (SplitText-like effect using standard GSAP)
+        // We act on the container, but since we don't have SplitText plugin, we animate the element itself
+        tl.fromTo(titleRef.current,
+            { y: 100, opacity: 0, scale: 0.9 },
+            {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                duration: 1.5,
+                ease: "power4.out"
+            }
+        )
+            .fromTo(subTitleRef.current,
+                { y: 20, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1,
+                    ease: "power2.out"
+                },
+                "-=1"
+            );
 
-        // 2. Grid/Particle System Animation (The "50+" animations requested)
+        // 2. Grid/Particle System Animation
         const cells = gridRef.current.children;
 
         // Initial Staggered Reveal
-        tl.add(cells, {
-            scale: [0, 1],
-            opacity: [0, 0.4],
-            translateZ: 0,
-            rotateZ: [45, 0],
-            duration: 800,
-            delay: stagger(50, { grid: [10, 10], from: 'center' }),
-            ease: 'outElastic(1, .5)',
-        }, '-=1000');
+        gsap.fromTo(cells,
+            { scale: 0, opacity: 0, rotation: 45 },
+            {
+                scale: 1,
+                opacity: 0.4,
+                rotation: 0,
+                duration: 1,
+                stagger: {
+                    amount: 1,
+                    grid: [10, 10],
+                    from: "center",
+                    ease: "power2.out"
+                },
+                delay: 0.5
+            }
+        );
 
         // Continuous Floating Animation Loop
-        // We use a separate animate call for the loop so it doesn't block the timeline
-        animate(cells, {
-            translateY: () => random(-20, 20),
-            translateX: () => random(-20, 20),
-            rotate: () => random(-180, 180),
-            scale: () => random(0.5, 1.5),
-            opacity: () => random(0.2, 0.6),
-            duration: () => random(3000, 5000),
-            delay: stagger(20, { from: 'center' }),
-            direction: 'alternate',
-            loop: true,
-            ease: 'easeInOutQuad',
+        gsap.to(cells, {
+            y: () => gsap.utils.random(-20, 20),
+            x: () => gsap.utils.random(-20, 20),
+            rotation: () => gsap.utils.random(-180, 180),
+            scale: () => gsap.utils.random(0.5, 1.5),
+            opacity: () => gsap.utils.random(0.2, 0.6),
+            duration: () => gsap.utils.random(3, 5),
+            stagger: {
+                amount: 2,
+                from: "random"
+            },
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
         });
 
-    }, []);
+    }, { scope: containerRef });
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!gridRef.current) return;
+        const { clientX, clientY } = e;
+        const { innerWidth, innerHeight } = window;
+        const xPos = (clientX / innerWidth - 0.5) * 50;
+        const yPos = (clientY / innerHeight - 0.5) * 50;
+
+        gsap.to(gridRef.current, {
+            x: xPos,
+            y: yPos,
+            duration: 1,
+            ease: "power2.out"
+        });
+    };
 
     // Color Palette for particles - Vibrant but fitting the cream theme
     const colors = ['#FF2D55', '#2997FF', '#AF52DE', '#FF9500', '#34C759'];
@@ -69,13 +99,14 @@ export default function Hero() {
     return (
         <section
             ref={containerRef}
+            onMouseMove={handleMouseMove}
             className="h-screen w-full flex flex-col justify-center items-center relative overflow-hidden bg-[#F5F5F7]"
             style={{ perspective: '1000px' }}
         >
             {/* Background Animated Grid System (100 Elements) */}
             <div
                 ref={gridRef}
-                className="absolute inset-0 grid grid-cols-10 grid-rows-10 pointer-events-none z-0"
+                className="absolute inset-0 grid grid-cols-10 grid-rows-10 pointer-events-none z-0 px-10 py-10"
             >
                 {[...Array(100)].map((_, i) => (
                     <div

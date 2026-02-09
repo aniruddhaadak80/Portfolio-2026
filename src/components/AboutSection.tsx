@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { createTimeline } from "animejs/timeline";
-import { animate } from "animejs/animation";
-import { stagger, round, random } from "animejs/utils";
-import { spring } from "animejs/easings/spring";
-import { onScroll } from "animejs/events";
+import React, { useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Stage 8: Expanded About Section
 // Features: SplitText (v4), 3D Transforms, Staggered Grid, Parallax, Color interpolation
@@ -20,109 +20,75 @@ const hobbies = [
 ];
 
 export default function AboutSection() {
-    const sectionRef = useRef<HTMLElement>(null);
-    const yearsRef = useRef<HTMLSpanElement>(null);
-    const projectsRef = useRef<HTMLSpanElement>(null);
-    const commitsRef = useRef<HTMLSpanElement>(null);
+    const containerRef = useRef<HTMLElement>(null);
     const bioRef = useRef<HTMLDivElement>(null);
-    const hobbyRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const gridRef = useRef<HTMLDivElement>(null);
 
-    const [activeHobby, setActiveHobby] = useState<number | null>(null);
+    useGSAP(() => {
+        if (!containerRef.current || !bioRef.current || !gridRef.current) return;
 
-    useEffect(() => {
-        if (!sectionRef.current || !bioRef.current) return;
+        // 1. Bio Text Staggered Reveal
+        // We look for any text elements and stagger them
+        const textElements = bioRef.current.children;
 
-        const counters = { years: 0, projects: 0, commits: 0 };
+        gsap.fromTo(textElements,
+            { y: 50, opacity: 0 },
+            {
+                y: 0,
+                opacity: 1,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: bioRef.current,
+                    start: "top 80%",
+                    toggleActions: "play none none reverse",
+                }
+            }
+        );
 
-        // 1. Initial Bio Animation (Split Text effect - manual for now as SplitText is a module)
-        const bioLines = bioRef.current.querySelectorAll('.bio-line');
-        animate(bioLines, {
-            translateY: [20, 0],
-            opacity: [0, 1],
-            delay: stagger(100),
-            duration: 800,
-            ease: 'outExpo',
+        // 2. Hobby Grid Card Stagger
+        const cards = gridRef.current.children;
+        gsap.fromTo(cards,
+            { y: 100, opacity: 0, rotation: 10 },
+            {
+                y: 0,
+                opacity: 1,
+                rotation: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "back.out(1.7)",
+                scrollTrigger: {
+                    trigger: gridRef.current,
+                    start: "top 85%",
+                }
+            }
+        );
+
+        // 3. Scrubbing Background Parallax
+        // We can't select .decoration elements easily without ref, assuming layout is okay without it or we add them back
+        // adding a subtle parallax to the whole section content
+        gsap.to(containerRef.current, {
+            backgroundPosition: "0% 100%",
+            ease: "none",
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+            }
         });
 
-        // 2. Scroll-triggered animations
-        const scrollObserver = onScroll({
-            target: sectionRef.current,
-            enter: '10% bottom',
-            onEnter: () => {
-                // Stats Counter
-                animate(counters, {
-                    years: 4,
-                    projects: 32,
-                    commits: 2800,
-                    duration: 2500,
-                    ease: 'outExpo',
-                    modifier: round(1),
-                    onUpdate: () => {
-                        if (yearsRef.current) yearsRef.current.textContent = String(counters.years);
-                        if (projectsRef.current) projectsRef.current.textContent = String(counters.projects);
-                        if (commitsRef.current) commitsRef.current.textContent = String(counters.commits);
-                    },
-                });
-
-                // Hobby Grid Reveal
-                animate(hobbyRefs.current.filter(Boolean) as HTMLElement[], {
-                    scale: [0.5, 1],
-                    opacity: [0, 1],
-                    translateY: [50, 0],
-                    rotate: () => random(-10, 10),
-                    delay: stagger(100, { from: 'center' }),
-                    ease: spring({ stiffness: 100, damping: 15 }),
-                });
-            },
-        });
-
-        // 3. Persistent Background Decorations (Floating)
-        const deco = sectionRef.current.querySelectorAll('.decoration');
-        animate(deco, {
-            translateX: () => [0, random(-30, 30)],
-            translateY: () => [0, random(-30, 30)],
-            rotate: () => [0, random(-20, 20)],
-            duration: () => random(3000, 5000),
-            loop: true,
-            alternate: true,
-            ease: 'easeInOutQuad',
-        });
-
-        return () => {
-            scrollObserver.revert();
-        };
-    }, []);
-
-    const handleHobbyMouseEnter = (index: number, target: HTMLElement) => {
-        setActiveHobby(index);
-        animate(target, {
-            scale: 1.1,
-            rotate: 0,
-            zIndex: 50,
-            duration: 400,
-            ease: spring({ stiffness: 200, damping: 10 }),
-        });
-    };
-
-    const handleHobbyMouseLeave = (index: number, target: HTMLElement) => {
-        setActiveHobby(null);
-        animate(target, {
-            scale: 1,
-            rotate: random(-5, 5),
-            zIndex: 1,
-            duration: 400,
-            ease: 'outBounce',
-        });
-    };
+    }, { scope: containerRef });
 
     return (
-        <section ref={sectionRef} id="about" className="min-h-screen w-full py-32 px-6 relative overflow-hidden bg-[#F5F5F7]">
+        <section ref={containerRef} id="about" className="min-h-screen w-full py-32 px-6 relative overflow-hidden bg-[#F5F5F7]">
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center z-10 relative">
 
                 {/* Text Content */}
                 <div ref={bioRef} className="space-y-8">
                     <h2 className="text-5xl md:text-7xl font-bold text-[#1D1D1F] leading-tight">
-                        Crafting <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2997FF] to-[#AF52DE] animate-pulse">Digital</span> <br /> Experiences
+                        Crafting <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2997FF] to-[#AF52DE] inline-block">Digital</span> <br /> Experiences
                     </h2>
                     <div className="text-lg md:text-xl text-[#86868B] leading-relaxed space-y-6">
                         <p>
@@ -133,11 +99,11 @@ export default function AboutSection() {
                         </p>
                     </div>
 
-                    <div className="flex gap-4 pt-8">
+                    <div className="flex flex-wrap gap-4 pt-8">
                         {['Innovation', 'Precision', 'Scale'].map((tag, i) => (
                             <span
                                 key={tag}
-                                className={`px-6 py-2 rounded-full border border-[#1D1D1F] font-medium tracking-wide transition-all cursor-default hover:text-white hover:border-transparent ${i === 0 ? 'hover:bg-[#FF2D55]' :
+                                className={`px-6 py-2 rounded-full border border-[#1D1D1F] font-medium tracking-wide transition-all cursor-default hover:text-white hover:border-transparent hover:scale-110 active:scale-95 duration-300 ${i === 0 ? 'hover:bg-[#FF2D55]' :
                                         i === 1 ? 'hover:bg-[#2997FF]' :
                                             'hover:bg-[#34C759]'
                                     }`}
@@ -149,20 +115,17 @@ export default function AboutSection() {
                 </div>
 
                 {/* Interactive Grid */}
-                <div className="grid grid-cols-2 gap-4 perspective-1000">
-                    {hobbies.map((hobby, i) => (
+                <div ref={gridRef} className="grid grid-cols-2 gap-4 perspective-1000">
+                    {hobbies.map((hobby) => (
                         <div
                             key={hobby.name}
-                            ref={(el) => { if (el) hobbyRefs.current[i] = el; }}
-                            onMouseEnter={(e) => handleHobbyMouseEnter(i, e.currentTarget)}
-                            onMouseLeave={(e) => handleHobbyMouseLeave(i, e.currentTarget)}
-                            className="aspect-square bg-white rounded-3xl p-6 flex flex-col justify-between shadow-sm hover:shadow-xl transition-shadow border border-gray-100 cursor-pointer"
+                            className="group aspect-square bg-white rounded-3xl p-6 flex flex-col justify-between shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 cursor-pointer hover:-translate-y-2"
                         >
-                            <span className="text-4xl">{hobby.icon}</span>
+                            <span className="text-4xl group-hover:scale-125 transition-transform duration-300 block w-fit">{hobby.icon}</span>
                             <div>
-                                <h3 className="text-xl font-bold text-[#1D1D1F]">{hobby.name}</h3>
+                                <h3 className="text-xl font-bold text-[#1D1D1F] group-hover:text-[#2997FF] transition-colors">{hobby.name}</h3>
                                 <div className="w-full bg-gray-100 h-1 mt-3 rounded-full overflow-hidden">
-                                    <div className="h-full" style={{ backgroundColor: hobby.color, width: '70%' }} />
+                                    <div className="h-full transition-all duration-1000 ease-out w-0 group-hover:w-[70%]" style={{ backgroundColor: hobby.color }} />
                                 </div>
                             </div>
                         </div>

@@ -1,14 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { createTimeline } from "animejs/timeline";
-import { animate } from "animejs/animation";
-import { stagger, random } from "animejs/utils";
-import { spring } from "animejs/easings/spring";
-import { onScroll } from "animejs/events";
+import React, { useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 
-// Stage 9: Highly Advanced Skills Section
-// Features: 3D Tilt, Detail Reveal, Progress Rings, Floating Tech Soup, Staggered Grid
+gsap.registerPlugin(ScrollTrigger);
 
 const skills = [
     { name: "React", level: 95, color: "#61DAFB", desc: "Expert in hooks, context, and ecosystem.", icon: <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-5-8a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm6 0a2 2 0 1 1 4 0 2 2 0 0 1-4 0z" /> },
@@ -23,81 +20,73 @@ const skills = [
 
 export default function SkillsSection() {
     const sectionRef = useRef<HTMLElement>(null);
+    const gridRef = useRef<HTMLDivElement>(null);
+    const techSoupRef = useRef<HTMLDivElement>(null);
     const [selectedSkill, setSelectedSkill] = useState<typeof skills[0] | null>(null);
     const detailRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        if (!sectionRef.current) return;
+    useGSAP(() => {
+        if (!sectionRef.current || !gridRef.current || !techSoupRef.current) return;
 
-        const cards = sectionRef.current.querySelectorAll('.skill-card');
-
-        // Staggered Entrance
-        animate(cards, {
-            translateY: [100, 0],
-            opacity: [0, 1],
-            scale: [0.8, 1],
-            delay: stagger(100, { grid: [4, 2], from: 'center' }),
-            duration: 1200,
-            ease: spring({ stiffness: 100, damping: 12 }),
-        });
-
-        // Background floating techs
-        const soup = sectionRef.current.querySelectorAll('.tech-soup-item');
-        animate(soup, {
-            translateX: () => [0, random(-100, 100)],
-            translateY: () => [0, random(-100, 100)],
-            rotate: () => random(-45, 45),
-            duration: () => random(5000, 10000),
-            loop: true,
-            alternate: true,
-            ease: 'easeInOutSine'
-        });
-    }, []);
-
-    useEffect(() => {
-        if (selectedSkill && detailRef.current) {
-            // Animate detail panel entrance
-            animate(detailRef.current, {
-                translateX: ['100%', '0%'],
-                opacity: [0, 1],
-                duration: 600,
-                ease: 'outExpo',
-            });
-
-            // Animate level bar
-            const bar = detailRef.current.querySelector('.level-bar');
-            if (bar) {
-                animate(bar, {
-                    width: [0, `${selectedSkill.level}%`],
-                    duration: 1500,
-                    delay: 400,
-                    ease: spring({ stiffness: 80, damping: 15 }),
-                });
+        // 1. Title Entrance
+        gsap.from(".skill-title", {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: "top 75%",
             }
+        });
+
+        // 2. Grid Staggered Entrance
+        gsap.from(".skill-card", {
+            y: 100,
+            opacity: 0,
+            scale: 0.8,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "back.out(1.2)",
+            scrollTrigger: {
+                trigger: gridRef.current,
+                start: "top 80%",
+            }
+        });
+
+        // 3. Tech Soup Parallax (Scrubbing)
+        // Moves the background letters at different speeds relative to scroll
+        const soupItems = techSoupRef.current.children;
+        Array.from(soupItems).forEach((item, i) => {
+            gsap.to(item, {
+                y: -100 * (i % 3 + 1), // variable speed
+                ease: "none",
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 1,
+                }
+            });
+        });
+
+    }, { scope: sectionRef });
+
+    // Floating effect for selected detail panel
+    useGSAP(() => {
+        if (selectedSkill && detailRef.current) {
+            gsap.fromTo(detailRef.current,
+                { x: 100, opacity: 0 },
+                { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }
+            );
+
+            // Animate progress bar
+            gsap.fromTo(".level-bar",
+                { width: 0 },
+                { width: `${selectedSkill.level}%`, duration: 1.5, ease: "power2.out", delay: 0.3 }
+            );
         }
     }, [selectedSkill]);
-
-    const handleMouseMove = (e: React.MouseEvent, target: HTMLElement) => {
-        const { left, top, width, height } = target.getBoundingClientRect();
-        const x = (e.clientX - left - width / 2) / 10;
-        const y = (e.clientY - top - height / 2) / 10;
-
-        animate(target, {
-            rotateY: x,
-            rotateX: -y,
-            duration: 100,
-            ease: 'linear'
-        });
-    };
-
-    const handleMouseLeave = (target: HTMLElement) => {
-        animate(target, {
-            rotateY: 0,
-            rotateX: 0,
-            duration: 400,
-            ease: 'outExpo'
-        });
-    };
 
     return (
         <section
@@ -106,36 +95,36 @@ export default function SkillsSection() {
             className="min-h-screen w-full relative bg-[#F5F5F7] py-32 overflow-hidden flex flex-col items-center"
         >
             {/* Tech Soup Background - Subtle Dark */}
-            {[...Array(15)].map((_, i) => (
-                <div
-                    key={i}
-                    className="tech-soup-item absolute text-[#1D1D1F]/5 text-8xl font-black pointer-events-none select-none uppercase"
-                    style={{
-                        top: `${random(0, 100)}%`,
-                        left: `${random(0, 100)}%`,
-                    }}
-                >
-                    {['JS', 'TS', 'PY', 'REACT', 'DB', 'WEB'][i % 6]}
-                </div>
-            ))}
+            <div ref={techSoupRef} className="absolute inset-0 pointer-events-none">
+                {[...Array(15)].map((_, i) => (
+                    <div
+                        key={i}
+                        className="tech-soup-item absolute text-[#1D1D1F]/5 text-8xl font-black select-none uppercase"
+                        style={{
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                            transform: `rotate(${Math.random() * 360}deg)`
+                        }}
+                    >
+                        {['JS', 'TS', 'PY', 'REACT', 'DB', 'WEB'][i % 6]}
+                    </div>
+                ))}
+            </div>
 
             <div className="max-w-7xl mx-auto px-6 w-full relative z-10 flex flex-col lg:flex-row gap-12">
 
                 {/* Grid Column */}
                 <div className="flex-1">
-                    <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-12 text-[#1D1D1F]">
+                    <h2 className="skill-title text-6xl md:text-8xl font-black uppercase tracking-tighter mb-12 text-[#1D1D1F]">
                         THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF9500] to-[#E0F2FE]">ENGINE</span>
                     </h2>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 perspective-1000">
+                    <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 perspective-1000">
                         {skills.map((skill) => (
                             <div
                                 key={skill.name}
                                 onClick={() => setSelectedSkill(skill)}
-                                onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
-                                onMouseLeave={(e) => handleMouseLeave(e.currentTarget)}
-                                className={`skill-card group relative p-8 rounded-3xl border transition-all cursor-pointer overflow-hidden ${selectedSkill?.name === skill.name ? 'bg-[#2997FF] border-transparent shadow-xl text-white' : 'bg-white border-gray-200 hover:shadow-lg hover:-translate-y-1'}`}
-                                style={{ transformStyle: 'preserve-3d', opacity: 0 }}
+                                className={`skill-card group relative p-8 rounded-3xl border transition-all cursor-pointer overflow-hidden ${selectedSkill?.name === skill.name ? 'bg-[#2997FF] border-transparent shadow-xl text-white scale-105' : 'bg-white border-gray-200 hover:shadow-lg hover:-translate-y-1'}`}
                             >
                                 <div className="relative z-10 flex flex-col items-center">
                                     <svg viewBox="0 0 24 24" fill="currentColor" className={`w-12 h-12 mb-4 transition-transform group-hover:scale-110 duration-500 ${selectedSkill?.name === skill.name ? 'text-white' : 'text-[#1D1D1F]'}`} style={{ color: selectedSkill?.name === skill.name ? '#fff' : skill.color }}>
