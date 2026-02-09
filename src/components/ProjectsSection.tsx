@@ -48,7 +48,7 @@ const projects = [
         year: "2022",
         tech: ["OpenCV", "TensorFlow"],
         metrics: "Real-time Translation",
-        image: "https://images.unsplash.com/photo-1535378437327-10eff3b3337f?auto=format&fit=crop&q=80&w=800" // Translation/Global
+        image: "https://images.unsplash.com/photo-1527689368864-3a821dbccc34?auto=format&fit=crop&q=80&w=800" // Travel/People
     },
     {
         id: 5,
@@ -58,7 +58,7 @@ const projects = [
         year: "2022",
         tech: ["Stripe", "Next.js", "PostgreSQL"],
         metrics: "$1M+ GMV",
-        image: "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&q=80&w=800" // Commerce
+        image: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=800" // Payment/Shopping
     },
     {
         id: 6,
@@ -68,7 +68,7 @@ const projects = [
         year: "2024",
         tech: ["GSAP", "Next.js"],
         metrics: "50+ Features",
-        image: "https://images.unsplash.com/photo-1545665277-5937a59539fc?auto=format&fit=crop&q=80&w=800" // Abstract/Design
+        image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=800" // Minimalist Architecture
     },
 ];
 
@@ -186,9 +186,10 @@ export default function ProjectsSection() {
                                         className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
                                         style={{ backgroundImage: `url(${project.image})` }}
                                     />
-                                    {/* Gradient Overlay - Reduced Opacity for Visibility */}
-                                    <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-40 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-30`} />
-                                    <div className="absolute inset-0 bg-black/10" />
+                                    {/* Gradient Overlay - BARELY VISIBLE (Tint Only) */}
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-20 mix-blend-soft-light transition-opacity duration-500 group-hover:opacity-10`} />
+                                    {/* Subtle Dark Gradient at bottom for Text Contrast */}
+                                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
 
                                     <div className="absolute inset-0 p-10 flex flex-col justify-end">
                                         <div className="absolute top-8 right-8 text-[0.6rem] font-black uppercase tracking-[0.4em] text-white/60">
