@@ -118,6 +118,7 @@ export default function AboutSection() {
     return (
         <section
             ref={sectionRef}
+            id="about"
             className="min-h-screen w-full relative bg-black py-32 overflow-hidden px-6"
         >
             {/* Background Decorations */}

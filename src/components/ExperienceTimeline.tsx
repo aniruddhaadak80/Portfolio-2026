@@ -61,8 +61,14 @@ export default function ExperienceTimeline() {
         // 2. Scroll Sync for Timeline Path
         const scroll = onScroll({
             target: sectionRef.current,
-            onScroll: (progress) => {
-                drawable.set({ pathLength: progress });
+            onUpdate: (self) => {
+                const progress = self.progress;
+                const d = drawable as any;
+                if (Array.isArray(d)) {
+                    d.forEach(item => item.set({ pathLength: progress }));
+                } else if (d && typeof d.set === 'function') {
+                    d.set({ pathLength: progress });
+                }
             }
         });
 
@@ -77,7 +83,11 @@ export default function ExperienceTimeline() {
             ease: spring({ stiffness: 100, damping: 15 }),
         });
 
-        return () => scroll.revert();
+        return () => {
+            if (scroll && scroll.revert) {
+                scroll.revert();
+            }
+        };
     }, []);
 
     const handleMarkerHover = (index: number, target: HTMLElement) => {
@@ -103,6 +113,7 @@ export default function ExperienceTimeline() {
     return (
         <section
             ref={sectionRef}
+            id="experience"
             className="min-h-screen w-full bg-black py-40 overflow-hidden px-6 relative"
         >
             <div className="max-w-4xl mx-auto flex gap-12 lg:gap-24">

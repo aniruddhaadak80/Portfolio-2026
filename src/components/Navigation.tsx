@@ -37,7 +37,7 @@ export default function Navigation() {
                 opacity: [0, 1],
                 translateY: [50, 0],
                 duration: 600,
-                delay: (el: Element, i: number) => i * 100,
+                delay: (el: any, i: number) => i * 100,
                 ease: spring({ stiffness: 100, damping: 15 }),
             }, '-=400');
 
@@ -64,13 +64,25 @@ export default function Navigation() {
     };
 
     const routes = [
-        { name: 'Home', path: '/' },
-        { name: 'About', path: '/about' },
-        { name: 'Skills', path: '/skills' },
-        { name: 'Work', path: '/work' },
-        { name: 'Experience', path: '/experience' },
-        { name: 'Contact', path: '/contact' }
+        { name: 'Home', path: '#home' },
+        { name: 'About', path: '#about' },
+        { name: 'Skills', path: '#skills' },
+        { name: 'Work', path: '#work' },
+        { name: 'Experience', path: '#experience' },
+        { name: 'Contact', path: '#contact' }
     ];
+
+    const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+        closeMenu();
+        if (pathname === '/' && path.startsWith('#')) {
+            e.preventDefault();
+            const id = path.substring(1);
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    };
 
     return (
         <>
@@ -92,8 +104,8 @@ export default function Navigation() {
                         {routes.map((route) => (
                             <Link
                                 key={route.name}
-                                href={route.path}
-                                onClick={closeMenu}
+                                href={pathname === '/' ? route.path : `/${route.path}`}
+                                onClick={(e) => handleLinkClick(e, route.path)}
                                 className={`text-4xl md:text-6xl font-bold transition-colors hover:text-gray-500 ${pathname === route.path ? 'line-through decoration-blue-500' : ''}`}
                                 style={{ opacity: 0 }}
                             >

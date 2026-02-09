@@ -104,6 +104,7 @@ export default function ContactSection() {
     return (
         <section
             ref={sectionRef}
+            id="contact"
             className="min-h-screen w-full bg-black py-40 flex flex-col items-center justify-center relative overflow-hidden px-6"
         >
             {/* Particle Field Background */}
