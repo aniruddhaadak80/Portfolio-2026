@@ -86,15 +86,38 @@ export default function Navigation() {
 
     return (
         <>
-            <button
-                onClick={toggleMenu}
-                className="fixed top-8 right-8 z-[100] w-12 h-12 flex items-center justify-center bg-[#1D1D1F] rounded-full hover:scale-110 transition-transform shadow-lg"
-            >
-                <div className={`w-6 h-0.5 bg-[#F5F5F7] transition-all ${isOpen ? 'rotate-45 translate-y-0.5' : '-translate-y-1'}`} />
-                <div className={`absolute w-6 h-0.5 bg-[#F5F5F7] transition-all ${isOpen ? '-rotate-45 -translate-y-0' : 'translate-y-1'}`} />
-            </button>
+            <nav className="fixed top-0 left-0 right-0 z-50 py-6 px-8 flex justify-between items-center mix-blend-difference text-white">
+                <div className="text-xl font-bold tracking-tighter uppercase">Aniruddha Adak</div>
 
-            <div ref={menuRef} className="fixed inset-0 z-40 pointer-events-none">
+                {/* Desktop Menu */}
+                <div className="hidden md:flex gap-8 items-center">
+                    {routes.map((route) => (
+                        <Link
+                            key={route.name}
+                            href={pathname === '/' ? route.path : `/${route.path}`}
+                            onClick={(e) => handleLinkClick(e, route.path)}
+                            className={`text-sm font-medium tracking-widest uppercase hover:text-[#2997FF] transition-colors ${pathname === route.path ? 'text-[#2997FF]' : 'text-[#1D1D1F]'}`}
+                        >
+                            {route.name}
+                        </Link>
+                    ))}
+                </div>
+
+                {/* Mobile Menu Toggle */}
+                <button
+                    onClick={toggleMenu}
+                    className="md:hidden w-12 h-12 flex items-center justify-center rounded-full hover:scale-110 transition-transform"
+                >
+                    <div className="relative w-6 h-4">
+                        <div className={`absolute left-0 w-6 h-0.5 bg-current transition-all ${isOpen ? 'top-2 rotate-45' : 'top-0'}`} />
+                        <div className={`absolute left-0 w-6 h-0.5 bg-current transition-all ${isOpen ? 'opacity-0' : 'top-2'}`} />
+                        <div className={`absolute left-0 w-6 h-0.5 bg-current transition-all ${isOpen ? 'top-2 -rotate-45' : 'top-4'}`} />
+                    </div>
+                </button>
+            </nav>
+
+            {/* Mobile Curtain Menu */}
+            <div ref={menuRef} className="fixed inset-0 z-40 pointer-events-none md:hidden">
                 <div
                     ref={bgRef}
                     className="absolute inset-0 bg-white"
@@ -106,7 +129,7 @@ export default function Navigation() {
                                 key={route.name}
                                 href={pathname === '/' ? route.path : `/${route.path}`}
                                 onClick={(e) => handleLinkClick(e, route.path)}
-                                className={`text-4xl md:text-6xl font-bold transition-all hover:text-[#2997FF] hover:tracking-widest ${pathname === route.path ? 'text-[#2997FF]' : ''}`}
+                                className="text-4xl font-bold transition-all hover:text-[#2997FF] hover:tracking-widest"
                                 style={{ opacity: 0 }}
                             >
                                 {route.name}

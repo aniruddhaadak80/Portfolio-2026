@@ -3,105 +3,114 @@
 import React, { useEffect, useRef } from "react";
 import { createTimeline } from "animejs/timeline";
 import { animate } from "animejs/animation";
-import { stagger } from "animejs/utils";
+import { stagger, random } from "animejs/utils";
 import { spring } from "animejs/easings/spring";
 
 export default function Hero() {
+    const containerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const subTitleRef = useRef<HTMLParagraphElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
+    const gridRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Stage 1: Hero Animation
-        // Using: animate(), createTimeline(), stagger, spring easing (v4 object params)
+        if (!containerRef.current || !titleRef.current || !subTitleRef.current || !gridRef.current) return;
 
-        // 1. Text Splitting
-        if (titleRef.current) {
-            const text = titleRef.current.innerText;
-            titleRef.current.innerHTML = text
-                .split("")
-                .map((char) => `<span class='char inline-block'>${char === " " ? "&nbsp;" : char}</span>`)
-                .join("");
-        }
+        const tl = createTimeline();
 
-        const chars = document.querySelectorAll('.char');
-
-        // Create spring easing with v4 object syntax
-        const springEase = spring({ mass: 1, stiffness: 80, damping: 10, velocity: 0 });
-
-        const tl = createTimeline({
-            defaults: {
+        // 1. Text Entrance
+        tl.add(titleRef.current, {
+            translateY: [100, 0],
+            opacity: [0, 1],
+            duration: 1000,
+            ease: spring({ stiffness: 100, damping: 12 }),
+        })
+            .add(subTitleRef.current, {
+                translateY: [50, 0],
+                opacity: [0, 1],
+                duration: 800,
+                delay: 200,
                 ease: 'outExpo',
-            },
+            }, '-=600');
+
+        // 2. Grid/Particle System Animation (The "50+" animations requested)
+        const cells = gridRef.current.children;
+
+        // Initial Staggered Reveal
+        tl.add(cells, {
+            scale: [0, 1],
+            opacity: [0, 0.4],
+            translateZ: 0,
+            rotateZ: [45, 0],
+            duration: 800,
+            delay: stagger(50, { grid: [10, 10], from: 'center' }),
+            ease: 'outElastic(1, .5)',
+        }, '-=1000');
+
+        // Continuous Floating Animation Loop
+        // We use a separate animate call for the loop so it doesn't block the timeline
+        animate(cells, {
+            translateY: () => random(-20, 20),
+            translateX: () => random(-20, 20),
+            rotate: () => random(-180, 180),
+            scale: () => random(0.5, 1.5),
+            opacity: () => random(0.2, 0.6),
+            duration: () => random(3000, 5000),
+            delay: stagger(20, { from: 'center' }),
+            direction: 'alternate',
+            loop: true,
+            ease: 'easeInOutQuad',
         });
 
-        tl.add(
-            chars,
-            {
-                translateY: [100, 0],
-                opacity: [0, 1],
-                ease: springEase,
-                delay: stagger(50, { start: 300 }),
-            }
-        )
-            .add(
-                subTitleRef.current!,
-                {
-                    opacity: [0, 1],
-                    translateY: [20, 0],
-                    duration: 800,
-                },
-                '-=1000'
-            );
-
-        // Parallax Effect on Mouse Move
-        const handleMouseMove = (e: MouseEvent) => {
-            if (!titleRef.current) return;
-            const x = (e.clientX / window.innerWidth - 0.5) * 20;
-            const y = (e.clientY / window.innerHeight - 0.5) * 20;
-
-            animate(titleRef.current, {
-                translateX: x,
-                translateY: y,
-                duration: 100,
-                ease: 'linear',
-            });
-        };
-
-        window.addEventListener('mousemove', handleMouseMove);
-
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-        };
     }, []);
+
+    // Color Palette for particles - Vibrant but fitting the cream theme
+    const colors = ['#FF2D55', '#2997FF', '#AF52DE', '#FF9500', '#34C759'];
 
     return (
         <section
             ref={containerRef}
-            className="h-screen w-full flex flex-col justify-center items-center relative overflow-hidden"
+            className="h-screen w-full flex flex-col justify-center items-center relative overflow-hidden bg-[#F5F5F7]"
             style={{ perspective: '1000px' }}
         >
-            <div className="z-10 text-center mix-blend-multiply">
+            {/* Background Animated Grid System (100 Elements) */}
+            <div
+                ref={gridRef}
+                className="absolute inset-0 grid grid-cols-10 grid-rows-10 pointer-events-none z-0"
+            >
+                {[...Array(100)].map((_, i) => (
+                    <div
+                        key={i}
+                        className="w-2 h-2 rounded-full mix-blend-multiply opacity-0"
+                        style={{
+                            placeSelf: 'center',
+                            backgroundColor: colors[i % colors.length],
+                            boxShadow: `0 0 10px ${colors[i % colors.length]}`
+                        }}
+                    />
+                ))}
+            </div>
+
+            <div className="z-10 text-center mix-blend-darken relative">
                 <h1
                     ref={titleRef}
-                    className="text-6xl md:text-9xl font-black mb-4 overflow-hidden text-[#1D1D1F]"
+                    className="text-6xl md:text-9xl font-black mb-4 text-[#1D1D1F] tracking-tight"
                 >
                     ANIRUDDHA ADAK
                 </h1>
                 <p
                     ref={subTitleRef}
-                    className="text-xl md:text-2xl text-[#86868B] font-medium tracking-widest"
+                    className="text-xl md:text-2xl text-[#86868B] font-medium tracking-widest uppercase"
                     style={{ opacity: 0 }}
                 >
-                    FULL STACK DEVELOPER & AI ENGINEER
+                    Full Stack Developer & AI Engineer
                 </p>
             </div>
 
-            {/* Background Abstract Elements - Soft/Cream Style */}
-            <div className="absolute inset-0 -z-10 overflow-hidden opacity-30">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#2997FF] rounded-full mix-blend-multiply filter blur-3xl animate-pulse opacity-20"></div>
-                <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-[#AF52DE] rounded-full mix-blend-multiply filter blur-3xl animate-pulse opacity-20" style={{ animationDelay: '1s' }}></div>
-                <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-[#FF2D55] rounded-full mix-blend-multiply filter blur-3xl animate-pulse opacity-20" style={{ animationDelay: '2s' }}></div>
+            {/* Additional Abstract Blobs for "More Colors" */}
+            <div className="absolute inset-0 -z-10 overflow-hidden opacity-30 pointer-events-none">
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#2997FF] rounded-full mix-blend-multiply filter blur-3xl animate-pulse opacity-40"></div>
+                <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-[#AF52DE] rounded-full mix-blend-multiply filter blur-3xl animate-pulse opacity-40" style={{ animationDelay: '1s' }}></div>
+                <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-[#FF2D55] rounded-full mix-blend-multiply filter blur-3xl animate-pulse opacity-40" style={{ animationDelay: '2s' }}></div>
             </div>
         </section>
     );
