@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { animate } from "animejs/animation";
@@ -37,7 +37,7 @@ export default function Navigation() {
                 opacity: [0, 1],
                 translateY: [50, 0],
                 duration: 600,
-                delay: (el: any, i: number) => i * 100,
+                delay: (el: any, i = 0) => i * 100,
                 ease: spring({ stiffness: 100, damping: 15 }),
             }, '-=400');
 
